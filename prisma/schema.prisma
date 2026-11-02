@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ═══════════════════════════════════════════════════
+// 📂 Category
+// ═══════════════════════════════════════════════════
+model Category {
+  id           String    @id @default(cuid())
+  name         String    @unique
+  nameEn       String?   @unique
+  slug         String    @unique
+  description  String?
+  displayOrder Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  products     Product[]
+
+  @@map("categories")
+}
+
+// ═══════════════════════════════════════════════════
+// 📦 Product
+// ═══════════════════════════════════════════════════
+model Product {
+  id             String   @id @default(cuid())
+  name           String
+  nameEn         String?
+  slug           String   @unique
+  description    String?
+  descriptionEn  String?
+  price          Decimal  @db.Decimal(10, 2)
+  imageUrl       String?
+  isAvailable    Boolean  @default(true)
+  isFeatured     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  categoryId     String
+  category       Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  
+  variants       ProductVariant[]
+  modifiers      ModifierGroup[]
+  orderItems     OrderItem[]
+
+  @@map("products")
+}
+
+// ═══════════════════════════════════════════════════
+// 👕 ProductVariant
+// ═══════════════════════════════════════════════════
+model ProductVariant {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  name      String
+  sku       String? @unique
+  price     Decimal @db.Decimal(10, 2)
+  stock     Int     @default(100)
+
+  @@map("product_variants")
+}
+
+// ═══════════════════════════════════════════════════
+// 🧀 Modifiers
+// ═══════════════════════════════════════════════════
+model ModifierGroup {
+  id        String     @id @default(cuid())
+  productId String
+  product   Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  name      String
+  minSelect Int        @default(0)
+  maxSelect Int        @default(1)
+  modifiers Modifier[]
+
+  @@map("modifier_groups")
+}
+
+model Modifier {
+  id          String        @id @default(cuid())
+  groupId     String
+  group       ModifierGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  
+  name        String
+  priceDelta  Decimal       @db.Decimal(10, 2) @default(0)
+
+  @@map("modifiers")
+}
+
+// ═══════════════════════════════════════════════════
+// 🛒 Orders
+// ═══════════════════════════════════════════════════
+model Order {
+  id                    String      @id @default(cuid())
+  guestName             String
+  guestEmail            String
+  guestPhone            String?
+  
+  fulfillmentType       String      @default("SHIPPING")
+  shippingAddress       String?
+  tableNumber           String?
+  
+  status                String      @default("PENDING") 
+  paymentMethod         String      @default("CARD")
+  currency              String      // Removed @default("AED") as agreed
+  
+  totalAmount           Decimal     @db.Decimal(10, 2)
+  
+  stripeSessionId       String?     @unique
+  stripePaymentIntentId String?     @unique
+  
+  items                 OrderItem[]
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id           String   @id @default(cuid())
+  orderId      String
+  order        Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+  
+  variantId    String?
+  quantity     Int
+  priceAtOrder Decimal  @db.Decimal(10, 2)
+
+  @@map("order_items")
+}
+
+// ═══════════════════════════════════════════════════
+// 👤 User & Settings
+// ═══════════════════════════════════════════════════
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("STAFF")
+  isActive     Boolean  @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+
+  @@map("settings")
+}
