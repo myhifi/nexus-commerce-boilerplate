@@ -329,6 +329,58 @@
                 padding: 2rem 1.5rem;
             }
         }
+        /* =========================================
+           PHASE FOOTER
+           ========================================= */
+        .phase-footer {
+            background-color: #1a1a1a;
+            color: #a3a3a3;
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--sidebar-border);
+            margin-left: var(--sidebar-width); /* Aligns with content */
+            box-sizing: border-box;
+        }
+
+        .footer-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-link:hover {
+            color: #ffffff;
+        }
+
+        .footer-link.disabled {
+            color: #555;
+            pointer-events: none;
+        }
+
+        .footer-center {
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #666;
+        }
+
+        @media (max-width: 968px) {
+            .phase-footer {
+                margin-left: 0;
+                padding: 1.5rem;
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -613,5 +665,19 @@ npm run dev         # Local development server</code></pre>
             });
         });
     </script>
+
+    <!-- PHASE FOOTER -->
+    <footer class="phase-footer">
+        <a href="#" class="footer-link disabled">
+            ← Start
+        </a>
+        
+        <span class="footer-center">Phase 1</span>
+        
+        <a href="Phase-2-Report.html" class="footer-link">
+            Phase 2 (Data Fetching) →
+        </a>
+    </footer>
+
 </body>
 </html>
