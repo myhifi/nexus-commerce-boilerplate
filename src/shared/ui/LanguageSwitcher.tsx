@@ -9,11 +9,6 @@ import { routing } from "@/shared/i18n/routing";
 const LOCALES_DATA: Record<string, { label: string; code: string }> = {
   ar: { label: "العربية", code: "eg" },
   en: { label: "English", code: "gb" },
-  fr: { label: "Français", code: "fr" },
-  de: { label: "Deutsch", code: "de" },
-  es: { label: "Español", code: "es" },
-  it: { label: "Italiano", code: "it" },
-  zh: { label: "中文", code: "cn" },
 };
 
 type Props = {

@@ -4,7 +4,12 @@
     "menu": "Menu",
     "reserve": "Reserve a Table",
     "about": "About",    
-    "review": "Leave a Review"
+    "review": "Leave a Review",
+    "primaryNavigation": "Primary navigation",
+    "shop": "Shop",
+    "cartAriaLabel": "Cart ({count})",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
     "Home": {
     "Hero": {
@@ -711,6 +716,12 @@
     "total": "Total",
     "thankYou": "Thank you for dining with us!",
     "orderedAt": "Ordered At"
+  },
+    "Shop": {
+    "kicker": "OUR COLLECTION",
+    "title": "Shop All Products",
+    "subtitle": "Discover our carefully curated selection of products.",
+    "empty": "No products available at the moment."
   },
   "Errors": {
     "unauthorized": "Not authorized",

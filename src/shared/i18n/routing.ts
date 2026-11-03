@@ -1,12 +1,12 @@
-import {defineRouting} from 'next-intl/routing';
+import { defineRouting } from 'next-intl/routing';
 
 export const routing = defineRouting({
-  locales: ['ar', 'en', 'fr', 'de', 'es', 'it', 'zh'],
+  locales: ['ar', 'en'],
   defaultLocale: 'ar',
   localePrefix: 'always'
 });
 
 export type Locale = (typeof routing.locales)[number];
 
-// اللغات التي تُكتب من اليمين لليسار (العربية فقط)
+// Languages that are written Right-to-Left (Arabic only)
 export const RTL_LOCALES: Locale[] = ['ar'];
