@@ -22,9 +22,10 @@ export type ProductCardData = {
 
 type Props = {
   product: ProductCardData;
+  priority?: boolean;
 };
 
-export function ProductCard({ product }: Props) {
+export function ProductCard({ product, priority = false }: Props) {
   const t = useTranslations("Shop");
   const locale = useLocale();
   const addItem = useCartStore((s) => s.addItem);
@@ -67,6 +68,7 @@ export function ProductCard({ product }: Props) {
             src={product.imageUrl}
             alt={displayName}
             fill
+            priority={priority}
             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
