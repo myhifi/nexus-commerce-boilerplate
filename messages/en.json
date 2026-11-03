@@ -721,7 +721,11 @@
     "kicker": "OUR COLLECTION",
     "title": "Shop All Products",
     "subtitle": "Discover our carefully curated selection of products.",
-    "empty": "No products available at the moment."
+    "empty": "No products available at the moment.",
+    "fromPrice": "From {price}",
+    "viewOptions": "View Options",
+    "addToCart": "Add to Cart",
+    "unavailable": "Unavailable"
   },
   "Errors": {
     "unauthorized": "Not authorized",
