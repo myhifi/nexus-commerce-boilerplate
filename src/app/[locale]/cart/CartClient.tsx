@@ -51,7 +51,7 @@ export function CartClient() {
       <div className="grid gap-8 md:grid-cols-3">
         {/* Cart Items List */}
         <div className="space-y-4 md:col-span-2">
-          {items.map((item) => (
+          {items.map((item, index) => (
             <div
               key={item.lineId}
               className="flex gap-4 rounded-xl border border-border bg-card p-4"
@@ -64,6 +64,7 @@ export function CartClient() {
                     alt={item.productName}
                     fill
                     sizes="96px"
+                    priority={index === 0}
                     className="object-cover"
                   />
                 ) : (
