@@ -54,6 +54,25 @@
     "summary": "ملخص الطلب",
     "each": "{price} للواحد"
   },
+  "Checkout": {
+    "title": "إتمام الطلب",
+    "subtitle": "أدخل بياناتك لإكمال طلبك.",
+    "backToCart": "العودة للسلة",
+    "name": "الاسم الكامل",
+    "namePlaceholder": "أحمد محمد",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "ahmed@example.com",
+    "phone": "رقم الهاتف",
+    "phonePlaceholder": "+20 100 123 4567",
+    "address": "عنوان التوصيل",
+    "addressPlaceholder": "١٢٣ شارع الرئيسي، القاهرة، مصر",
+    "submit": "تأكيد الطلب",
+    "submitting": "جاري المعالجة...",
+    "successTitle": "تم تقديم الطلب بنجاح!",
+    "successMessage": "شكراً لشرائك. رقم طلبك هو {orderId}.",
+    "errorGeneric": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "errorEmptyCart": "سلة التسوق فارغة."
+  },
   "Menu": {
     "dineInBanner": "أنت تطلب الآن للطاولة رقم {table}",
     "clearTable": "التبديل إلى التوصيل",
@@ -307,20 +326,6 @@
       "footerAutoMessage": "هذا البريد أُرسل تلقائياً من نظام حجوزات Lumière.",
       "footerContact": "لأي استفسار، تواصل معنا عبر واتساب:"
     }
-  },
-  "Checkout": {
-    "payByCard": "الدفع بالبطاقة",
-    "payByCash": "الدفع عند الاستلام",
-    "dineInOrder": "طلب داخلي",
-    "tableNumber": "الطاولة {table}",
-    "title": "إتمام الطلب",
-    "subtitle": "أدخل تفاصيل التوصيل لإكمال الطلب.",
-    "nameLabel": "الاسم الكامل",
-    "emailLabel": "البريد الإلكتروني",
-    "phoneLabel": "رقم الهاتف",
-    "addressLabel": "عنوان التوصيل",
-    "payNow": "ادفع الآن",
-    "processing": "جاري المعالجة..."
   },
   "CheckoutSuccess": {
     "downloadReceipt": "تحميل الإيصال",

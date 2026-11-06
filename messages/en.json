@@ -54,6 +54,25 @@
     "summary": "Order Summary",
     "each": "{price} each"
   },
+  "Checkout": {
+    "title": "Checkout",
+    "subtitle": "Enter your details to complete your order.",
+    "backToCart": "Back to Cart",
+    "name": "Full Name",
+    "namePlaceholder": "John Doe",
+    "email": "Email Address",
+    "emailPlaceholder": "john@example.com",
+    "phone": "Phone Number",
+    "phonePlaceholder": "+1 234 567 8900",
+    "address": "Shipping Address",
+    "addressPlaceholder": "123 Main St, City, Country",
+    "submit": "Place Order",
+    "submitting": "Processing...",
+    "successTitle": "Order Placed Successfully!",
+    "successMessage": "Thank you for your purchase. Your order ID is {orderId}.",
+    "errorGeneric": "Something went wrong. Please try again.",
+    "errorEmptyCart": "Your cart is empty."
+  },
   "Menu": {
     "dineInBanner": "You are ordering for Table {table}",
     "clearTable": "Switch to Delivery",
@@ -307,20 +326,6 @@
       "footerAutoMessage": "This email was sent automatically by the Lumière reservation system.",
       "footerContact": "For any inquiries, contact us via WhatsApp:"
     }
-  },
-  "Checkout": {
-    "payByCard": "Pay by Card",
-    "payByCash": "Cash on Delivery",
-    "dineInOrder": "Dine-In Order",
-    "tableNumber": "Table {table}",
-    "title": "Checkout",
-    "subtitle": "Enter your delivery details to complete the order.",
-    "nameLabel": "Full Name",
-    "emailLabel": "Email Address",
-    "phoneLabel": "Phone Number",
-    "addressLabel": "Delivery Address",
-    "payNow": "Pay Now",
-    "processing": "Processing..."
   },
   "CheckoutSuccess": {
     "downloadReceipt": "Download Receipt",

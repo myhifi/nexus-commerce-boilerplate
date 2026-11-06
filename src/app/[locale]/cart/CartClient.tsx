@@ -154,9 +154,12 @@ export function CartClient() {
                 {formatMoney(subtotal)}
               </span>
             </div>
-            <button className="w-full rounded-lg bg-accent py-3 font-medium text-accent-foreground transition-colors hover:bg-accent-dark">
+            <Link
+              href="/checkout"
+              className="block w-full rounded-lg bg-accent py-3 text-center font-medium text-accent-foreground transition-colors hover:bg-accent-dark"
+            >
               {t("checkout")}
-            </button>
+            </Link>
           </div>
         </div>
       </div>
