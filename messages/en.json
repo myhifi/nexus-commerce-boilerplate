@@ -735,7 +735,17 @@
     "fromPrice": "From {price}",
     "viewOptions": "View Options",
     "addToCart": "Add to Cart",
-    "unavailable": "Unavailable"
+    "unavailable": "Unavailable",
+    "backToShop": "Back to Shop",
+    "selectVariant": "Select Variant",
+    "selectRequiredModifiers": "Please select required modifiers for {group}",
+    "requiredCount": "Required: {count}",
+    "optional": "Optional",
+    "maxCount": "Max: {count}",
+    "selectedOfRequired": "{selected} of {required} selected",
+    "decreaseQuantity": "Decrease quantity",
+    "increaseQuantity": "Increase quantity",
+    "added": "Added to Cart!"
   },
   "Errors": {
     "unauthorized": "Not authorized",

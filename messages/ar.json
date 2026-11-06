@@ -735,7 +735,17 @@
     "fromPrice": "يبدأ من {price}",
     "viewOptions": "عرض الخيارات",
     "addToCart": "أضف إلى السلة",
-    "unavailable": "غير متوفر"
+    "unavailable": "غير متوفر",
+    "backToShop": "العودة للمتجر",
+    "selectVariant": "اختر النوع",
+    "selectRequiredModifiers": "يرجى اختيار الخيارات المطلوبة لـ {group}",
+    "requiredCount": "مطلوب: {count}",
+    "optional": "اختياري",
+    "maxCount": "الحد الأقصى: {count}",
+    "selectedOfRequired": "تم اختيار {selected} من {required}",
+    "decreaseQuantity": "تقليل الكمية",
+    "increaseQuantity": "زيادة الكمية",
+    "added": "تمت الإضافة للسلة!"
   },
     "Errors": {
     "unauthorized": "غير مصرح",

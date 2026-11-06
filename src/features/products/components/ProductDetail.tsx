@@ -1,12 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { ArrowLeft, ShoppingBag } from "lucide-react";
 import { storeConfig } from "@/shared/config/store.config";
 import { useCartStore, type CartModifier } from "@/features/cart/store";
+import { Link } from "@/shared/i18n/navigation";
 
 type Variant = {
   id: string;
@@ -79,24 +79,22 @@ export function ProductDetail({ product }: Props) {
     ? Number(selectedVariant.price)
     : Number(product.basePrice);
 
-  const selectedModifiersFlat = useMemo<CartModifier[]>(() => {
-    const result: CartModifier[] = [];
-    for (const group of product.modifierGroups) {
-      const ids = selectedModifiers[group.id] ?? [];
-      for (const modId of ids) {
-        const mod = group.modifiers.find((m) => m.id === modId);
-        if (mod) {
-          result.push({
-            modifierId: mod.id,
-            groupId: group.id,
-            name: mod.name,
-            priceDelta: Number(mod.priceDelta),
-          });
-        }
+  // React Compiler handles memoization, no need for useMemo here.
+  const selectedModifiersFlat: CartModifier[] = [];
+  for (const group of product.modifierGroups) {
+    const ids = selectedModifiers[group.id] ?? [];
+    for (const modId of ids) {
+      const mod = group.modifiers.find((m) => m.id === modId);
+      if (mod) {
+        selectedModifiersFlat.push({
+          modifierId: mod.id,
+          groupId: group.id,
+          name: mod.name,
+          priceDelta: Number(mod.priceDelta),
+        });
       }
     }
-    return result;
-  }, [selectedModifiers, product.modifierGroups]);
+  }
 
   const unitTotal =
     unitBasePrice +
@@ -175,15 +173,16 @@ export function ProductDetail({ product }: Props) {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8">
       <Link
-        href={`/${locale}/shop`}
-        className="mb-6 inline-flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900"
+        href="/shop"
+        className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
       >
-        <ArrowLeft className="h-4 w-4" />
+        <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
         {t("backToShop")}
       </Link>
 
       <div className="grid gap-8 md:grid-cols-2">
-        <div className="relative aspect-square overflow-hidden rounded-2xl bg-neutral-100">
+        {/* Product Image */}
+        <div className="relative aspect-square overflow-hidden rounded-2xl bg-muted">
           {product.imageUrl ? (
             <Image
               src={product.imageUrl}
@@ -194,7 +193,7 @@ export function ProductDetail({ product }: Props) {
               priority
             />
           ) : (
-            <div className="flex h-full items-center justify-center text-neutral-400">
+            <div className="flex h-full items-center justify-center text-muted-foreground">
               <ShoppingBag className="h-16 w-16" />
             </div>
           )}
@@ -205,25 +204,24 @@ export function ProductDetail({ product }: Props) {
           )}
         </div>
 
+        {/* Product Details */}
         <div className="flex flex-col">
-          <h1 className="text-3xl font-bold tracking-tight text-neutral-900">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
             {displayName}
           </h1>
 
           {displayDescription && (
-            <p className="mt-2 text-neutral-600">{displayDescription}</p>
+            <p className="mt-2 text-muted-foreground">{displayDescription}</p>
           )}
 
-          <div
-            className="mt-4 text-2xl font-bold"
-            style={{ color: storeConfig.branding.primaryColor }}
-          >
+          <div className="mt-4 text-2xl font-bold text-accent">
             {formattedUnitPrice}
           </div>
 
+          {/* Variants */}
           {hasVariants && (
             <section className="mt-6">
-              <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-neutral-700">
+              <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                 {t("selectVariant")}
               </h2>
               <div className="flex flex-wrap gap-2">
@@ -238,8 +236,8 @@ export function ProductDetail({ product }: Props) {
                       disabled={isOutOfStock}
                       className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
                         isSelected
-                          ? "border-neutral-900 bg-neutral-900 text-white"
-                          : "border-neutral-300 bg-white text-neutral-800 hover:border-neutral-500"
+                          ? "border-accent bg-accent text-accent-foreground"
+                          : "border-border bg-background text-foreground hover:border-accent"
                       } ${isOutOfStock ? "cursor-not-allowed opacity-40" : ""}`}
                     >
                       {v.name} — {formatMoney(Number(v.price))}
@@ -250,15 +248,16 @@ export function ProductDetail({ product }: Props) {
             </section>
           )}
 
+          {/* Modifiers */}
           {product.modifierGroups.map((group) => {
             const selectedCount = selectedModifiers[group.id]?.length ?? 0;
             const isSingle = group.maxSelect === 1;
 
             return (
               <section key={group.id} className="mt-6">
-                <h2 className="mb-2 flex flex-wrap items-baseline gap-2 text-sm font-semibold uppercase tracking-wide text-neutral-700">
+                <h2 className="mb-2 flex flex-wrap items-baseline gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                   <span>{group.name}</span>
-                  <span className="text-xs font-normal normal-case text-neutral-500">
+                  <span className="text-xs font-normal normal-case text-muted-foreground">
                     {group.minSelect > 0
                       ? t("requiredCount", { count: group.minSelect })
                       : t("optional")}
@@ -275,7 +274,7 @@ export function ProductDetail({ product }: Props) {
                     return (
                       <label
                         key={m.id}
-                        className="flex cursor-pointer items-center justify-between rounded-lg border border-neutral-200 px-4 py-2 transition-colors hover:border-neutral-400"
+                        className="flex cursor-pointer items-center justify-between rounded-lg border border-border px-4 py-2 transition-colors hover:border-accent"
                       >
                         <div className="flex items-center gap-2">
                           <input
@@ -283,14 +282,14 @@ export function ProductDetail({ product }: Props) {
                             name={group.id}
                             checked={isChecked}
                             onChange={() => toggleModifier(group, m.id)}
-                            className="h-4 w-4"
+                            className="h-4 w-4 accent-accent"
                           />
-                          <span className="text-sm text-neutral-900">
+                          <span className="text-sm text-foreground">
                             {m.name}
                           </span>
                         </div>
                         {delta > 0 && (
-                          <span className="text-sm text-neutral-600">
+                          <span className="text-sm text-muted-foreground">
                             +{formatMoney(delta)}
                           </span>
                         )}
@@ -299,7 +298,7 @@ export function ProductDetail({ product }: Props) {
                   })}
                 </div>
                 {group.minSelect > 0 && selectedCount < group.minSelect && (
-                  <p className="mt-1 text-xs text-amber-600">
+                  <p className="mt-1 text-xs text-warning">
                     {t("selectedOfRequired", {
                       selected: selectedCount,
                       required: group.minSelect,
@@ -310,25 +309,26 @@ export function ProductDetail({ product }: Props) {
             );
           })}
 
+          {/* Actions */}
           <div className="mt-auto pt-8">
             <div className="flex items-center gap-4">
-              <div className="flex items-center rounded-full border border-neutral-300">
+              <div className="flex items-center rounded-full border border-border">
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="rounded-l-full px-4 py-2 text-lg hover:bg-neutral-100 disabled:opacity-40"
+                  className="rounded-s-full px-4 py-2 text-lg hover:bg-muted disabled:opacity-40"
                   aria-label={t("decreaseQuantity")}
                   disabled={quantity <= 1}
                 >
                   −
                 </button>
-                <span className="min-w-10 text-center text-sm font-semibold">
+                <span className="min-w-10 text-center text-sm font-semibold text-foreground">
                   {quantity}
                 </span>
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => q + 1)}
-                  className="rounded-r-full px-4 py-2 text-lg hover:bg-neutral-100"
+                  className="rounded-e-full px-4 py-2 text-lg hover:bg-muted"
                   aria-label={t("increaseQuantity")}
                 >
                   +
@@ -339,7 +339,7 @@ export function ProductDetail({ product }: Props) {
                 type="button"
                 onClick={handleAddToCart}
                 disabled={!canAdd}
-                className="flex-1 rounded-full bg-neutral-900 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex-1 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-accent-foreground transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {!product.isAvailable
                   ? t("unavailable")
@@ -350,7 +350,7 @@ export function ProductDetail({ product }: Props) {
             </div>
 
             {error && (
-              <p className="mt-2 text-sm text-red-600">{error}</p>
+              <p className="mt-2 text-sm text-destructive">{error}</p>
             )}
           </div>
         </div>
