@@ -8,20 +8,20 @@ import { storeConfig } from "@/shared/config/store.config";
 import { useCartStore, type CartModifier } from "@/features/cart/store";
 import { Link } from "@/shared/i18n/navigation";
 
-type Variant = {
+export type Variant = {
   id: string;
   name: string;
   price: string;
   stock: number;
 };
 
-type Modifier = {
+export type Modifier = {
   id: string;
   name: string;
   priceDelta: string;
 };
 
-type ModifierGroup = {
+export type ModifierGroup = {
   id: string;
   name: string;
   minSelect: number;
@@ -29,7 +29,7 @@ type ModifierGroup = {
   modifiers: Modifier[];
 };
 
-type ProductDetailData = {
+export type ProductDetailData = {
   id: string;
   name: string;
   nameEn: string | null;

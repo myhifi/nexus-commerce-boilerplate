@@ -52,3 +52,5 @@ skills-lock.json
 
 # Prisma Generated Client
 /src/generated/prisma
+
+AGENTS.md
