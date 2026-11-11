@@ -828,5 +828,31 @@
       "whatsappNumberInvalid": "Invalid WhatsApp number (must contain 10-15 digits)",
       "whatsappNumberInvalidChars": "WhatsApp number contains invalid characters"
     }
+  },
+  "AdminAuth": {
+    "title": "Admin Login",
+    "subtitle": "Enter your credentials to access the dashboard.",
+    "email": "Email Address",
+    "password": "Password",
+    "signIn": "Sign In",
+    "signingIn": "Signing in...",
+    "error": "Invalid email or password."
+  },
+  "AdminLayout": {
+    "brand": "Nexus Admin",
+    "orders": "Orders",
+    "products": "Products",
+    "settings": "Settings",
+    "signOut": "Sign Out"
+  },
+  "AdminOrders": {
+    "title": "Orders",
+    "total": "{count} Total",
+    "orderId": "Order ID",
+    "date": "Date",
+    "customer": "Customer",
+    "status": "Status",
+    "totalAmount": "Total",
+    "empty": "No orders found."
   }
 }

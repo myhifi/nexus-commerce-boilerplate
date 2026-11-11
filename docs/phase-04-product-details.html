@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Commerce - Phase 5 Handoff Report</title>
+    <title>Nexus Commerce - Phase 4 Handoff Report</title>
     <style>
         :root {
             --sidebar-bg: #1a1a1a; --sidebar-text: #a3a3a3; --sidebar-text-hover: #ffffff;
@@ -39,7 +39,7 @@
         .tag-react { background-color: #fef08a; color: #854d0e; }
         .tag-nextjs { background-color: #e5e5e5; color: #171717; }
         .tag-prisma { background-color: #d1fae5; color: #047857; }
-        .tag-i18n { background-color: #dcfce7; color: #166534; }
+        .tag-supabase { background-color: #dcfce7; color: #166534; }
         .section-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 700; margin-bottom: 0.25rem; }
         .problem-desc { margin-bottom: 1rem; color: var(--text-main); }
         .solution-desc { margin-bottom: 0.5rem; color: var(--text-main); }
@@ -68,7 +68,7 @@
 <body>
     <aside class="sidebar">
         <div class="sidebar-brand">
-            <div class="phase-badge">Phase 05</div>
+            <div class="phase-badge">Phase 04</div>
             <h2>Nexus Commerce</h2>
             <p>Handoff Report</p>
         </div>
@@ -76,76 +76,80 @@
         <ul>
             <li><a href="#commands" class="nav-link">⚡ Commands & Installations</a></li>
             <li><a href="#steps" class="nav-link">📋 Main Steps</a></li>
-            <li><a href="#i18n" class="nav-link">🌍 i18n & Emails</a></li>
-            <li><a href="#tracking" class="nav-link">🚚 Order Tracking</a></li>
+            <li><a href="#db" class="nav-link">🗄️ Database & Supabase</a></li>
+            <li><a href="#react" class="nav-link">⚛️ React & Refactoring</a></li>
             <li><a href="#cheatsheet" class="nav-link">🧠 Developer Cheat-Sheet</a></li>
         </ul>
     </aside>
     <main class="main-container">
         <header>
-            <div class="header-subtitle">Phase 05 · Emails & Tracking</div>
-            <h1>Order Confirmation & Tracking</h1>
-            <div class="subtitle">Trigger localized emails from Server Actions and build a visual timeline for customers to track their orders.</div>
+            <div class="header-subtitle">Phase 04 · Product Details</div>
+            <h1>Dynamic Product Routes & Data Mapping</h1>
+            <div class="subtitle">Build the dynamic product detail page, map complex Prisma relations to UI props, and handle SEO metadata.</div>
             <div class="badge">Production Build Verified ✓</div>
         </header>
 
         <div class="category-title" id="commands">⚡ Command History & Installations</div>
         <div class="card">
             <h3 class="problem-title">Commands Executed</h3>
-            <pre><code># Validation
-npx tsc --noEmit
+            <pre><code># Database Seeding (after reconnecting)
+npx prisma db seed
 
-# Running Dev Server
+# Validation
+npx tsc --noEmit
 npm run dev</code></pre>
         </div>
 
-        <div class="category-title" id="steps">📋 Phase 5 Main Steps</div>
+        <div class="category-title" id="steps">📋 Phase 4 Main Steps</div>
         <div class="card">
             <ul class="checklist">
-                <li>Integrated <code>sendOrderConfirmation</code> inside the <code>createOrder</code> Server Action.</li>
-                <li>Passed the active <code>locale</code> from the checkout form to the Server Action via a hidden input.</li>
-                <li>Fixed missing <code>labelShippingAddress</code> keys in the email JSON translations.</li>
-                <li>Created <code>getOrderById</code> query in <code>src/features/checkout/queries.ts</code>.</li>
-                <li>Built the dynamic <code>/orders/[id]</code> route with SEO metadata.</li>
-                <li>Designed a responsive order status timeline (Pending → Paid → Preparing → Ready → Delivered).</li>
-                <li>Added a "Track Order" button to the Checkout Success screen.</li>
+                <li>Added missing translation keys for the Product Detail page.</li>
+                <li>Refactored <code>ProductDetail.tsx</code> to remove <code>useMemo</code> (React Compiler handles it) and use localized <code>Link</code>.</li>
+                <li>Exported <code>ProductDetailData</code>, <code>Variant</code>, and <code>ModifierGroup</code> types.</li>
+                <li>Built <code>getProductBySlug</code> query to fetch a single product with variants and modifiers.</li>
+                <li>Created the dynamic route <code>/products/[slug]/page.tsx</code> with <code>generateMetadata</code> and <code>notFound()</code>.</li>
+                <li>Mapped Prisma's <code>modifiers</code> relation to the <code>modifierGroups</code> prop expected by the UI.</li>
             </ul>
         </div>
 
-        <div class="category-title" id="i18n">🌍 i18n & Emails Difficulties</div>
+        <div class="category-title" id="db">🗄️ Database & Supabase Difficulties</div>
         <div class="card warning">
-            <h3 class="problem-title">1. Email Lost the User's Language <span class="tag tag-i18n">next-intl</span></h3>
+            <h3 class="problem-title">1. Supabase Project Paused (ENOTFOUND) <span class="tag tag-supabase">Supabase</span></h3>
             <div class="section-label">The Problem</div>
             <div class="problem-desc">
-                The order confirmation email was sent in English even though the user checked out in Arabic. The Server Action didn't know what language the user was browsing in.
+                The app threw <code>(ENOTFOUND) tenant/user postgres.[REF] not found</code>. The Supabase connection pooler couldn't find the project.
+            </div>
+            <div class="section-label">Root Cause</div>
+            <div class="problem-desc">
+                Free-tier Supabase projects automatically pause after a period of inactivity. When paused, the pooler removes the route to the tenant.
             </div>
             <div class="section-label">The Solution</div>
             <div class="solution-desc">
-                Passed the locale through the FormData: <code>&lt;input type="hidden" name="locale" value={locale} /&gt;</code>. The Server Action extracts it and passes it to the email function.
-            </div>
-        </div>
-        <div class="card warning">
-            <h3 class="problem-title">2. Missing Email Translation Key <span class="tag tag-i18n">next-intl</span></h3>
-            <div class="section-label">The Problem</div>
-            <div class="problem-desc">
-                The console threw <code>MISSING_MESSAGE: Could not resolve Email.OrderConfirmation.labelShippingAddress</code>. The React Email component expected a different key than what was in the JSON file.
-            </div>
-            <div class="section-label">The Solution</div>
-            <div class="solution-desc">
-                Opened the JSON files and found <code>labelDeliveryAddress</code> was used instead. Replaced it with <code>labelShippingAddress</code> to match the component's prop.
+                Logged into the Supabase Dashboard, clicked <strong>"Restore project"</strong>, and waited for the status to change to "Healthy." Then re-ran <code>npx prisma db seed</code>.
             </div>
         </div>
 
-        <div class="category-title" id="tracking">🚚 Order Tracking</div>
+        <div class="category-title" id="react">⚛️ React & Refactoring</div>
         <div class="card warning">
-            <h3 class="problem-title">3. RTL Timeline Logic <span class="tag tag-nextjs">Next.js</span></h3>
+            <h3 class="problem-title">2. Removing `useMemo` for React Compiler <span class="tag tag-react">React 19</span></h3>
             <div class="section-label">The Problem</div>
             <div class="problem-desc">
-                Ensuring the visual order status timeline (e.g., Pending -> Delivered) renders correctly in RTL (right-to-left) without manually reversing the array.
+                <code>ProductDetail.tsx</code> used <code>useMemo</code> for the <code>selectedModifiersFlat</code> array, which violates the project rule of relying on React Compiler.
             </div>
             <div class="section-label">The Solution</div>
             <div class="solution-desc">
-                Used CSS Flexbox combined with the <code>dir="rtl"</code> attribute on the HTML. Flexbox naturally reverses the visual order, while the logical index (0, 1, 2...) remains correct in the React array.
+                Replaced the <code>useMemo</code> block with a standard synchronous variable assignment. React Compiler handles the memoization automatically under the hood.
+            </div>
+        </div>
+        <div class="card warning">
+            <h3 class="problem-title">3. Prisma Relation Mapping <span class="tag tag-prisma">Prisma</span></h3>
+            <div class="section-label">The Problem</div>
+            <div class="problem-desc">
+                The Prisma schema names the relation <code>modifiers</code>, but the <code>ProductDetailData</code> type expects the prop name <code>modifierGroups</code>.
+            </div>
+            <div class="section-label">The Solution</div>
+            <div class="solution-desc">
+                Mapped the data explicitly in <code>queries.ts</code>: <code>modifierGroups: product.modifiers.map(...)</code>. This decouples the DB schema from the UI component's prop shape.
             </div>
         </div>
 
@@ -153,25 +157,28 @@ npm run dev</code></pre>
         <div class="card">
             <ul class="cheat-sheet">
                 <li>
-                    <strong>Passing Context to Server Actions:</strong> Server Actions don't have access to the URL or request context directly. If you need the user's locale, use hidden inputs in the form.
+                    <strong>Supabase Free Tier:</strong> Projects pause after ~7 days of inactivity. If you get an <code>ENOTFOUND</code> or <code>XX000</code> error, check the Supabase dashboard first before debugging your code.
                 </li>
                 <li>
-                    <strong>React Email in Server Actions:</strong> You can render and send React components directly inside Server Actions. It runs asynchronously, so ensure you <code>await</code> the email send before returning the success state to the client.
+                    <strong>Dynamic Routes in Next.js 16:</strong> The <code>params</code> prop is a Promise. Always <code>await params</code> before accessing properties like <code>slug</code>.
                 </li>
                 <li>
-                    <strong>Visual Timelines:</strong> Using absolute positioning for the connecting line and flexbox for the nodes makes it extremely easy to build a responsive, RTL-compatible timeline.
+                    <strong>SEO for E-commerce:</strong> Always use <code>generateMetadata</code> in dynamic routes to set the product title, description, and OpenGraph image.
                 </li>
                 <li>
-                    <strong>Preventing 404s:</strong> When building a tracking page, always use <code>notFound()</code> if the order ID doesn't exist in the database. This prevents server errors and gives a proper 404 page.
+                    <strong>Handling 404s:</strong> Use Next.js's <code>notFound()</code> function inside dynamic routes when a database query returns <code>null</code>. It renders the closest <code>not-found.tsx</code> and returns the correct 404 HTTP status.
+                </li>
+                <li>
+                    <strong>Decoupling DB from UI:</strong> Never pass raw Prisma models directly to client components. Always map them to a specific DTO (Data Transfer Object) that perfectly matches the component's props.
                 </li>
             </ul>
         </div>
     </main>
 
     <footer class="phase-footer">
-        <a href="Phase-4-Report.html" class="footer-link">← Phase 4 (Product Details)</a>
-        <span class="footer-center">Phase 5</span>
-        <a href="Phase-6-Report.html" class="footer-link">Phase 6 (Admin Dashboard) →</a>
+        <a href="phase-03-secure-checkout.html" class="footer-link">← Phase 3 (Checkout)</a>
+        <span class="footer-center">Phase 4</span>
+        <a href="phase-05-order-tracking.html" class="footer-link">Phase 5 (Order Emails) →</a>
     </footer>
 
     <script>

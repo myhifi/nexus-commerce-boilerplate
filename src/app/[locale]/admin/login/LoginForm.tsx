@@ -1,10 +1,12 @@
 "use client";
 
 import { useActionState } from "react";
+import { useTranslations } from "next-intl";
 import { authenticate } from "@/features/auth/actions";
 import { Loader2 } from "lucide-react";
 
 export function LoginForm() {
+  const t = useTranslations("AdminAuth");
   const [errorMessage, formAction, isPending] = useActionState(
     authenticate,
     undefined,
@@ -14,7 +16,7 @@ export function LoginForm() {
     <form action={formAction} className="space-y-4">
       <div>
         <label htmlFor="email" className="mb-1 block text-sm font-medium text-foreground">
-          Email Address
+          {t("email")}
         </label>
         <input
           id="email"
@@ -28,7 +30,7 @@ export function LoginForm() {
 
       <div>
         <label htmlFor="password" className="mb-1 block text-sm font-medium text-foreground">
-          Password
+          {t("password")}
         </label>
         <input
           id="password"
@@ -41,7 +43,7 @@ export function LoginForm() {
       </div>
 
       {errorMessage && (
-        <p className="text-sm font-medium text-destructive">{errorMessage}</p>
+        <p className="text-sm font-medium text-destructive">{t("error")}</p>
       )}
 
       <button
@@ -50,7 +52,7 @@ export function LoginForm() {
         className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent py-3 font-medium text-accent-foreground transition-colors hover:bg-accent-dark disabled:opacity-50"
       >
         {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-        {isPending ? "Signing in..." : "Sign In"}
+        {isPending ? t("signingIn") : t("signIn")}
       </button>
     </form>
   );

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Commerce - Phase 4 Handoff Report</title>
+    <title>Nexus Commerce - Phase 6 Handoff Report</title>
     <style>
         :root {
             --sidebar-bg: #1a1a1a; --sidebar-text: #a3a3a3; --sidebar-text-hover: #ffffff;
@@ -36,10 +36,9 @@
         .card.warning { border-left: 4px solid var(--danger); }
         .problem-title { font-size: 1.15rem; font-weight: 600; color: var(--text-main); margin-top: 0; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
         .tag { font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
-        .tag-react { background-color: #fef08a; color: #854d0e; }
+        .tag-auth { background-color: #e0e7ff; color: #3730a3; }
         .tag-nextjs { background-color: #e5e5e5; color: #171717; }
-        .tag-prisma { background-color: #d1fae5; color: #047857; }
-        .tag-supabase { background-color: #dcfce7; color: #166534; }
+        .tag-i18n { background-color: #dcfce7; color: #166534; }
         .section-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 700; margin-bottom: 0.25rem; }
         .problem-desc { margin-bottom: 1rem; color: var(--text-main); }
         .solution-desc { margin-bottom: 0.5rem; color: var(--text-main); }
@@ -68,7 +67,7 @@
 <body>
     <aside class="sidebar">
         <div class="sidebar-brand">
-            <div class="phase-badge">Phase 04</div>
+            <div class="phase-badge">Phase 06</div>
             <h2>Nexus Commerce</h2>
             <p>Handoff Report</p>
         </div>
@@ -76,80 +75,99 @@
         <ul>
             <li><a href="#commands" class="nav-link">⚡ Commands & Installations</a></li>
             <li><a href="#steps" class="nav-link">📋 Main Steps</a></li>
-            <li><a href="#db" class="nav-link">🗄️ Database & Supabase</a></li>
-            <li><a href="#react" class="nav-link">⚛️ React & Refactoring</a></li>
+            <li><a href="#auth" class="nav-link">🛡️ Authentication & Security</a></li>
+            <li><a href="#i18n" class="nav-link">🌍 i18n & Admin UI</a></li>
             <li><a href="#cheatsheet" class="nav-link">🧠 Developer Cheat-Sheet</a></li>
         </ul>
     </aside>
     <main class="main-container">
         <header>
-            <div class="header-subtitle">Phase 04 · Product Details</div>
-            <h1>Dynamic Product Routes & Data Mapping</h1>
-            <div class="subtitle">Build the dynamic product detail page, map complex Prisma relations to UI props, and handle SEO metadata.</div>
+            <div class="header-subtitle">Phase 06 · Admin Dashboard</div>
+            <h1>Authentication & Admin Management</h1>
+            <div class="subtitle">Secure the application with NextAuth.js v5, build a protected Admin Dashboard, and manage orders with full RTL support.</div>
             <div class="badge">Production Build Verified ✓</div>
         </header>
 
         <div class="category-title" id="commands">⚡ Command History & Installations</div>
         <div class="card">
-            <h3 class="problem-title">Commands Executed</h3>
-            <pre><code># Database Seeding (after reconnecting)
-npx prisma db seed
+            <h3 class="problem-title">Installed Packages</h3>
+            <ul class="checklist">
+                <li><code>next-auth@beta</code> (v5) — Required for App Router support.</li>
+                <li><code>bcryptjs</code> — For hashing passwords.</li>
+                <li><code>@types/bcryptjs</code> — TypeScript definitions.</li>
+            </ul>
+            <h3 class="problem-title" style="margin-top: 1.5rem;">Commands Executed</h3>
+            <pre><code># Package management
+npm install next-auth@beta bcryptjs
+npm install -D @types/bcryptjs
 
-# Validation
-npx tsc --noEmit
-npm run dev</code></pre>
+# Database Seeding
+npx prisma db seed</code></pre>
         </div>
 
-        <div class="category-title" id="steps">📋 Phase 4 Main Steps</div>
+        <div class="category-title" id="steps">📋 Phase 6 Main Steps</div>
         <div class="card">
             <ul class="checklist">
-                <li>Added missing translation keys for the Product Detail page.</li>
-                <li>Refactored <code>ProductDetail.tsx</code> to remove <code>useMemo</code> (React Compiler handles it) and use localized <code>Link</code>.</li>
-                <li>Exported <code>ProductDetailData</code>, <code>Variant</code>, and <code>ModifierGroup</code> types.</li>
-                <li>Built <code>getProductBySlug</code> query to fetch a single product with variants and modifiers.</li>
-                <li>Created the dynamic route <code>/products/[slug]/page.tsx</code> with <code>generateMetadata</code> and <code>notFound()</code>.</li>
-                <li>Mapped Prisma's <code>modifiers</code> relation to the <code>modifierGroups</code> prop expected by the UI.</li>
+                <li>Installed NextAuth v5 and Bcrypt.</li>
+                <li>Created an Admin user in the Prisma seed script.</li>
+                <li>Split Auth config into <code>auth.config.ts</code> (Edge) and <code>auth.ts</code> (Node).</li>
+                <li>Created the NextAuth route handler.</li>
+                <li>Updated <code>proxy.ts</code> to protect <code>/admin</code> routes and handle login redirects.</li>
+                <li>Built the localized Login Page and Server Action.</li>
+                <li>Built the Admin Layout with a sticky sidebar and logout button.</li>
+                <li>Built the Admin Orders Table with full Arabic/English translations.</li>
             </ul>
         </div>
 
-        <div class="category-title" id="db">🗄️ Database & Supabase Difficulties</div>
+        <div class="category-title" id="auth">🛡️ Authentication & Security</div>
+
         <div class="card warning">
-            <h3 class="problem-title">1. Supabase Project Paused (ENOTFOUND) <span class="tag tag-supabase">Supabase</span></h3>
+            <h3 class="problem-title">1. Middleware & Prisma Incompatibility <span class="tag tag-auth">NextAuth v5</span></h3>
             <div class="section-label">The Problem</div>
             <div class="problem-desc">
-                The app threw <code>(ENOTFOUND) tenant/user postgres.[REF] not found</code>. The Supabase connection pooler couldn't find the project.
-            </div>
-            <div class="section-label">Root Cause</div>
-            <div class="problem-desc">
-                Free-tier Supabase projects automatically pause after a period of inactivity. When paused, the pooler removes the route to the tenant.
+                Next.js Middleware runs on the Edge Runtime, which does not support Prisma or Bcrypt. Attempting to run the full Auth config inside <code>proxy.ts</code> caused build errors.
             </div>
             <div class="section-label">The Solution</div>
             <div class="solution-desc">
-                Logged into the Supabase Dashboard, clicked <strong>"Restore project"</strong>, and waited for the status to change to "Healthy." Then re-ran <code>npx prisma db seed</code>.
+                Split the configuration. <code>auth.config.ts</code> contains only Edge-compatible settings (routes, callbacks), while <code>auth.ts</code> contains the Prisma Credentials provider.
             </div>
         </div>
 
-        <div class="category-title" id="react">⚛️ React & Refactoring</div>
         <div class="card warning">
-            <h3 class="problem-title">2. Removing `useMemo` for React Compiler <span class="tag tag-react">React 19</span></h3>
+            <h3 class="problem-title">2. JWTSessionError: No Decryption Secret <span class="tag tag-auth">NextAuth v5</span></h3>
             <div class="section-label">The Problem</div>
             <div class="problem-desc">
-                <code>ProductDetail.tsx</code> used <code>useMemo</code> for the <code>selectedModifiersFlat</code> array, which violates the project rule of relying on React Compiler.
+                The console threw <code>JWTSessionError: no matching decryption secret</code> because the <code>AUTH_SECRET</code> was missing from the environment variables.
             </div>
             <div class="section-label">The Solution</div>
             <div class="solution-desc">
-                Replaced the <code>useMemo</code> block with a standard synchronous variable assignment. React Compiler handles the memoization automatically under the hood.
+                Added <code>AUTH_SECRET="a_very_long_random_string_at_least_32_characters_long_12345"</code> to <code>.env</code> and restarted the dev server.
             </div>
         </div>
+
+        <div class="category-title" id="i18n">🌍 i18n & Admin UI</div>
+
         <div class="card warning">
-            <h3 class="problem-title">3. Prisma Relation Mapping <span class="tag tag-prisma">Prisma</span></h3>
+            <h3 class="problem-title">3. Missing Admin Translations <span class="tag tag-i18n">next-intl</span></h3>
             <div class="section-label">The Problem</div>
             <div class="problem-desc">
-                The Prisma schema names the relation <code>modifiers</code>, but the <code>ProductDetailData</code> type expects the prop name <code>modifierGroups</code>.
+                The Admin dashboard was hardcoded in English, breaking the bilingual requirement of the boilerplate.
             </div>
             <div class="section-label">The Solution</div>
             <div class="solution-desc">
-                Mapped the data explicitly in <code>queries.ts</code>: <code>modifierGroups: product.modifiers.map(...)</code>. This decouples the DB schema from the UI component's prop shape.
+                Added <code>AdminAuth</code>, <code>AdminLayout</code>, and <code>AdminOrders</code> namespaces to both JSON files. Injected <code>getTranslations</code> into the Server Components and <code>useTranslations</code> into the Client Login form.
+            </div>
+        </div>
+
+        <div class="card warning">
+            <h3 class="problem-title">4. Hidden Logout Button <span class="tag tag-nextjs">Next.js</span></h3>
+            <div class="section-label">The Problem</div>
+            <div class="problem-desc">
+                The logout button was being pushed off-screen if the orders table was too long, making it inaccessible.
+            </div>
+            <div class="section-label">The Solution</div>
+            <div class="solution-desc">
+                Changed the Admin Sidebar to <code>sticky top-0 h-screen</code> and used <code>flex-1</code> on the navigation to ensure the Logout button always stays pinned to the bottom.
             </div>
         </div>
 
@@ -157,28 +175,25 @@ npm run dev</code></pre>
         <div class="card">
             <ul class="cheat-sheet">
                 <li>
-                    <strong>Supabase Free Tier:</strong> Projects pause after ~7 days of inactivity. If you get an <code>ENOTFOUND</code> or <code>XX000</code> error, check the Supabase dashboard first before debugging your code.
+                    <strong>Session Persistence:</strong> If you try to visit the login page while logged in, NextAuth will automatically redirect you to the dashboard. This is a security feature. To test the login page, click the "Sign Out" button.
                 </li>
                 <li>
-                    <strong>Dynamic Routes in Next.js 16:</strong> The <code>params</code> prop is a Promise. Always <code>await params</code> before accessing properties like <code>slug</code>.
+                    <strong>NextAuth v5 Splitting:</strong> Always keep Prisma and Bcrypt out of <code>auth.config.ts</code>. Only use that file inside the Middleware/Edge runtime.
                 </li>
                 <li>
-                    <strong>SEO for E-commerce:</strong> Always use <code>generateMetadata</code> in dynamic routes to set the product title, description, and OpenGraph image.
+                    <strong>Sticky Admin Sidebars:</strong> Use <code>sticky top-0 h-screen flex flex-col</code> on the sidebar, and <code>flex-1</code> on the navigation links. This guarantees the logout button is always visible at the bottom of the screen.
                 </li>
                 <li>
-                    <strong>Handling 404s:</strong> Use Next.js's <code>notFound()</code> function inside dynamic routes when a database query returns <code>null</code>. It renders the closest <code>not-found.tsx</code> and returns the correct 404 HTTP status.
-                </li>
-                <li>
-                    <strong>Decoupling DB from UI:</strong> Never pass raw Prisma models directly to client components. Always map them to a specific DTO (Data Transfer Object) that perfectly matches the component's props.
+                    <strong>Server-Side Auth Guard:</strong> Even with middleware, always call <code>const session = await auth(); if (!session) redirect("/login");</code> inside protected Server Pages (like the orders page) for defense-in-depth.
                 </li>
             </ul>
         </div>
     </main>
 
     <footer class="phase-footer">
-        <a href="Phase-3-Report.html" class="footer-link">← Phase 3 (Checkout)</a>
-        <span class="footer-center">Phase 4</span>
-        <a href="Phase-5-Report.html" class="footer-link">Phase 5 (Order Emails) →</a>
+        <a href="phase-05-order-tracking.html" class="footer-link">← Phase 5 (Order Emails)</a>
+        <span class="footer-center">Phase 6</span>
+        <a href="#" class="footer-link disabled">Phase 7 (Stripe) →</a>
     </footer>
 
     <script>
