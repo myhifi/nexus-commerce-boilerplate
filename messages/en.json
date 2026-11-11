@@ -51,6 +51,7 @@
     "itemCount": "{count, plural, =0 {No items} =1 {1 item} other {# items}}",
     "remove": "Remove item",
     "continueShopping": "Continue Shopping",
+    "trackOrder": "Track Order",
     "summary": "Order Summary",
     "each": "{price} each"
   },
@@ -297,7 +298,7 @@
         "labelOrderId": "Order ID",
         "labelItems": "Items",
         "labelTotal": "Total",
-        "labelDeliveryAddress": "Delivery Address",
+        "labelShippingAddress": "Shipping Address",
         "labelTableNumber": "Table Number",
         "trackButton": "Track Your Order",
         "trackHint": "You can track the status of your order at any time by clicking the button above or by visiting our Track Order page.",

@@ -70,12 +70,20 @@ export function CheckoutForm() {
         <p className="mb-8 text-muted-foreground">
           {t("successMessage", { orderId: state.orderId.slice(0, 8).toUpperCase() })}
         </p>
-        <button
-          onClick={() => router.push("/shop")}
-          className="rounded-lg bg-accent px-6 py-3 font-medium text-accent-foreground transition-colors hover:bg-accent-dark"
-        >
-          {tCart("continueShopping")}
-        </button>
+        <div className="flex gap-4">
+          <Link
+            href={`/orders/${state.orderId}`}
+            className="rounded-lg bg-accent px-6 py-3 font-medium text-accent-foreground transition-colors hover:bg-accent-dark"
+          >
+            {tCart("trackOrder")}
+          </Link>
+          <button
+            onClick={() => router.push("/shop")}
+            className="rounded-lg border border-border px-6 py-3 font-medium text-foreground transition-colors hover:bg-muted"
+          >
+            {tCart("continueShopping")}
+          </button>
+        </div>
       </div>
     );
   }
@@ -101,8 +109,9 @@ export function CheckoutForm() {
           <p className="mb-8 text-muted-foreground">{t("subtitle")}</p>
 
           <form action={formAction} className="space-y-4">
-            {/* Hidden input to pass cart data to server action securely */}
+            {/* Hidden inputs to pass cart data and locale */}
             <input type="hidden" name="items" value={JSON.stringify(cartPayload)} />
+            <input type="hidden" name="locale" value={locale} />
 
             <div>
               <label htmlFor="guestName" className="mb-1 block text-sm font-medium text-foreground">{t("name")}</label>

@@ -4,6 +4,7 @@ import { z } from "zod";
 import { prisma } from "@/shared/lib/prisma";
 import { storeConfig } from "@/shared/config/store.config";
 import { revalidatePath } from "next/cache";
+import { sendOrderConfirmation } from "@/shared/lib/email/send";
 
 // 1. Define the strict shape of the incoming data
 const checkoutSchema = z.object({
@@ -39,6 +40,8 @@ export async function createOrder(
     return { success: false, error: "Invalid cart data format." };
   }
 
+  const locale = (formData.get("locale") as string) || "en";
+
   // 3. Validate the form data
   const validatedFields = checkoutSchema.safeParse({
     guestName: formData.get("guestName"),
@@ -60,7 +63,6 @@ export async function createOrder(
 
   try {
     // 4. SECURITY: Re-fetch real prices from the database
-    // We NEVER trust the prices sent from the client.
     const productIds = items.map((i) => i.productId);
     const dbProducts = await prisma.product.findMany({
       where: { id: { in: productIds } },
@@ -69,12 +71,14 @@ export async function createOrder(
 
     let calculatedTotal = 0;
     const orderItemsToCreate = [];
+    const emailItems = []; // Array for the email template
 
     for (const item of items) {
       const dbProduct = dbProducts.find((p) => p.id === item.productId);
       if (!dbProduct) throw new Error(`Product not found: ${item.productId}`);
 
       let priceAtOrder = Number(dbProduct.price);
+      let variantName = null;
 
       // If a variant was selected, use the variant's real price
       if (item.variantId) {
@@ -83,6 +87,7 @@ export async function createOrder(
         );
         if (!dbVariant) throw new Error(`Variant not found: ${item.variantId}`);
         priceAtOrder = Number(dbVariant.price);
+        variantName = dbVariant.name;
       }
 
       calculatedTotal += priceAtOrder * item.quantity;
@@ -90,6 +95,15 @@ export async function createOrder(
       orderItemsToCreate.push({
         productId: item.productId,
         variantId: item.variantId,
+        quantity: item.quantity,
+        priceAtOrder: priceAtOrder,
+      });
+
+      // Map to the shape expected by the Email template
+      emailItems.push({
+        name: dbProduct.name,
+        variantName: variantName,
+        modifiers: [], // Modifiers are not passed through this basic checkout yet
         quantity: item.quantity,
         priceAtOrder: priceAtOrder,
       });
@@ -111,7 +125,23 @@ export async function createOrder(
       },
     });
 
-    // 6. Clear the cart cache on the client
+    // 6. Send the confirmation email (using the Console provider by default)
+    await sendOrderConfirmation({
+      to: guestEmail,
+      guestName,
+      orderId: order.id,
+      items: emailItems,
+      subtotal: calculatedTotal, // In this basic version, subtotal = total
+      shippingAmount: 0,
+      totalAmount: calculatedTotal,
+      currency: storeConfig.currency,
+      fulfillmentType: "SHIPPING",
+      shippingAddress: shippingAddress,
+      tableNumber: null,
+      locale: locale,
+    });
+
+    // 7. Clear the cart cache on the client
     revalidatePath("/cart");
 
     return { success: true, orderId: order.id };
