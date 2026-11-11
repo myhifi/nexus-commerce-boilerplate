@@ -1,6 +1,7 @@
 import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import * as dotenv from "dotenv";
+import * as bcrypt from "bcryptjs";
 
 dotenv.config();
 
@@ -95,7 +96,21 @@ async function main() {
     },
   });
 
+  // 4. Create Admin User
+  const passwordHash = await bcrypt.hash("password123", 10);
+  await prisma.user.upsert({
+    where: { email: "admin@nexus.com" },
+    update: {},
+    create: {
+      email: "admin@nexus.com",
+      passwordHash,
+      name: "Admin User",
+      role: "ADMIN",
+    },
+  });
+
   console.log("✅ Database seeded successfully!");
+  console.log("👤 Admin user created: admin@nexus.com / password123");
 }
 
 main()
