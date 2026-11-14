@@ -123,6 +123,7 @@
             <li><a href="#security" class="nav-link">🛡️ Security & Server Actions</a></li>
             <li><a href="#react" class="nav-link">⚛️ React 19 & UI Fixes</a></li>
             <li><a href="#cheatsheet" class="nav-link">🧠 Developer Cheat-Sheet</a></li>
+            <li><a href="#white-label" class="nav-link">🏷️ White-Label Checklist</a></li>
         </ul>
     </aside>
 
@@ -229,6 +230,23 @@ npm run build</code></pre>
                 <li>
                     <strong>JSON Duplicate Keys:</strong> VS Code will warn you about duplicate object keys. JSON parsers silently use the last one. Always merge or remove duplicates.
                 </li>
+            </ul>
+        </div>
+        <div class="category-title" id="white-label">🏷️ White-Label &amp; Multi-Client Onboarding Checklist</div>
+        <div class="card">
+            <h3 class="problem-title">Client Setup: Checkout Flow</h3>
+            <div class="section-label">1. Config &amp; Env Files</div>
+            <p class="solution-desc">None specific to this phase.</p>
+            <div class="section-label">2. Branding &amp; Assets</div>
+            <p class="solution-desc">Translate and update <code>messages/en.json</code> and <code>ar.json</code> under the <code>"Checkout"</code> namespace if the client requires different field labels (e.g., VAT number, Company Name).</p>
+            <div class="section-label">3. Database &amp; Seeding</div>
+            <p class="solution-desc">None specific to this phase.</p>
+            <div class="section-label">4. Third-Party Services</div>
+            <p class="solution-desc">None specific to this phase.</p>
+            <div class="section-label">5. Quick Steps</div>
+            <ul class="checklist">
+                <li>Review checkout form fields with the client.</li>
+                <li>Update translations if custom fields are added.</li>
             </ul>
         </div>
     </main>

@@ -2,16 +2,13 @@
 
 import { useActionState, useEffect, useSyncExternalStore } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { Link, useRouter } from "@/shared/i18n/navigation";
+import { Link } from "@/shared/i18n/navigation";
 import { useCartStore } from "@/features/cart/store";
-import { createOrder, type CheckoutState } from "@/features/checkout/actions";
+import { createCheckoutSession, type CheckoutState } from "@/features/checkout/actions";
 import { storeConfig } from "@/shared/config/store.config";
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import Image from "next/image";
 
-/* ----------------------------------------------------------------
- * SSR-safe client detection (prevents hydration mismatch)
- * ---------------------------------------------------------------- */
 const emptySubscribe = () => () => {};
 const getClientSnapshot = () => true;
 const getServerSnapshot = () => false;
@@ -23,24 +20,20 @@ export function CheckoutForm() {
   const t = useTranslations("Checkout");
   const tCart = useTranslations("Cart");
   const locale = useLocale();
-  const router = useRouter();
-  
-  // 1. Hooks must be called at the top level
   const hasMounted = useIsClient();
-  const [state, formAction, isPending] = useActionState(createOrder, initialState);
+  
+  const [state, formAction, isPending] = useActionState(createCheckoutSession, initialState);
   
   const items = useCartStore((s) => s.items);
-  const clearCart = useCartStore((s) => s.clearCart);
   const getSubtotal = useCartStore((s) => s.getSubtotal);
 
-  // 2. Clear the cart ONLY after a successful order creation
+  // Redirect to Stripe Checkout when the session URL is ready
   useEffect(() => {
-    if (state.success && state.orderId) {
-      clearCart();
+    if (state.success && state.url) {
+      window.location.href = state.url;
     }
-  }, [state.success, state.orderId, clearCart]);
+  }, [state.success, state.url]);
 
-  // 3. Prevent rendering on the server to avoid hydration issues with Zustand
   if (!hasMounted) return null;
 
   const formatMoney = (amount: number) =>
@@ -50,7 +43,7 @@ export function CheckoutForm() {
     }).format(amount);
 
   // Empty Cart Guard
-  if (items.length === 0 && !state.success) {
+  if (items.length === 0) {
     return (
       <div className="text-center">
         <h1 className="text-2xl font-bold">{t("errorEmptyCart")}</h1>
@@ -61,34 +54,6 @@ export function CheckoutForm() {
     );
   }
 
-  // Success State
-  if (state.success && state.orderId) {
-    return (
-      <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-card p-12 text-center shadow-sm">
-        <CheckCircle2 className="mb-4 h-16 w-16 text-success" />
-        <h1 className="mb-2 text-3xl font-bold text-foreground">{t("successTitle")}</h1>
-        <p className="mb-8 text-muted-foreground">
-          {t("successMessage", { orderId: state.orderId.slice(0, 8).toUpperCase() })}
-        </p>
-        <div className="flex gap-4">
-          <Link
-            href={`/orders/${state.orderId}`}
-            className="rounded-lg bg-accent px-6 py-3 font-medium text-accent-foreground transition-colors hover:bg-accent-dark"
-          >
-            {tCart("trackOrder")}
-          </Link>
-          <button
-            onClick={() => router.push("/shop")}
-            className="rounded-lg border border-border px-6 py-3 font-medium text-foreground transition-colors hover:bg-muted"
-          >
-            {tCart("continueShopping")}
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  // Map items to a simple format for the server action
   const cartPayload = items.map((i) => ({
     productId: i.productId,
     variantId: i.variantId,
@@ -109,7 +74,6 @@ export function CheckoutForm() {
           <p className="mb-8 text-muted-foreground">{t("subtitle")}</p>
 
           <form action={formAction} className="space-y-4">
-            {/* Hidden inputs to pass cart data and locale */}
             <input type="hidden" name="items" value={JSON.stringify(cartPayload)} />
             <input type="hidden" name="locale" value={locale} />
 
@@ -167,10 +131,17 @@ export function CheckoutForm() {
 
             <button
               type="submit"
-              disabled={isPending}
-              className="w-full rounded-lg bg-accent py-3 font-medium text-accent-foreground transition-colors hover:bg-accent-dark disabled:opacity-50"
+              disabled={isPending || state.success}
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent py-3 font-medium text-accent-foreground transition-colors hover:bg-accent-dark disabled:opacity-50"
             >
-              {isPending ? t("submitting") : t("submit")}
+              {isPending || state.success ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Redirecting to Stripe...
+                </>
+              ) : (
+                t("submit")
+              )}
             </button>
           </form>
         </div>

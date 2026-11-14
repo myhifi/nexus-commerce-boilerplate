@@ -403,6 +403,7 @@
             <li><a href="#i18n" class="nav-link">🌍 i18n & Routing</a></li>
             <li><a href="#ui" class="nav-link">🎨 UI & CSS</a></li>
             <li><a href="#cheatsheet" class="nav-link">🧠 Developer Cheat-Sheet</a></li>
+            <li><a href="#white-label" class="nav-link">🏷️ White-Label Checklist</a></li>
         </ul>
     </aside>
 
@@ -634,6 +635,24 @@ npm run dev         # Local development server</code></pre>
             </ul>
         </div>
 
+        <div class="category-title" id="white-label">🏷️ White-Label &amp; Multi-Client Onboarding Checklist</div>
+        <div class="card">
+            <h3 class="problem-title">Client Setup: Design System &amp; Layout</h3>
+            <div class="section-label">1. Config &amp; Env Files</div>
+            <p class="solution-desc">Update <code>NEXT_PUBLIC_STORE_NAME</code> and <code>NEXT_PUBLIC_BUSINESS_TYPE</code> (RETAIL vs RESTAURANT) in <code>.env</code>.</p>
+            <div class="section-label">2. Branding &amp; Assets</div>
+            <p class="solution-desc">Change the CSS variables for primary/secondary colors in <code>src/app/globals.css</code> and update the logo path in <code>src/shared/config/store.config.ts</code>.</p>
+            <div class="section-label">3. Database &amp; Seeding</div>
+            <p class="solution-desc">None for this phase.</p>
+            <div class="section-label">4. Third-Party Services</div>
+            <p class="solution-desc">None for this phase.</p>
+            <div class="section-label">5. Quick Steps</div>
+            <ul class="checklist">
+                <li>Update brand name and colors.</li>
+                <li>Set the correct business type in <code>.env</code>.</li>
+                <li>Restrict i18n locales in <code>src/shared/i18n/routing.ts</code> if the client only needs specific languages.</li>
+            </ul>
+        </div>
     </main>
 
     <!-- SCRIPT FOR ACTIVE SIDEBAR HIGHLIGHTING -->

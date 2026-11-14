@@ -399,6 +399,7 @@
             <li><a href="#prisma" class="nav-link">🗄️ Database & Prisma</a></li>
             <li><a href="#nextjs" class="nav-link">⚛️ Next.js & React</a></li>
             <li><a href="#cheatsheet" class="nav-link">🧠 Developer Cheat-Sheet</a></li>
+            <li><a href="#white-label" class="nav-link">🏷️ White-Label Checklist</a></li>
         </ul>
     </aside>
 
@@ -544,6 +545,24 @@ export default defineConfig({
             </ul>
         </div>
 
+        <div class="category-title" id="white-label">🏷️ White-Label &amp; Multi-Client Onboarding Checklist</div>
+        <div class="card">
+            <h3 class="problem-title">Client Setup: Storefront &amp; Data</h3>
+            <div class="section-label">1. Config &amp; Env Files</div>
+            <p class="solution-desc">Update <code>DATABASE_URL</code> and <code>DIRECT_URL</code> with the client's Supabase credentials. Update <code>NEXT_PUBLIC_CURRENCY</code>.</p>
+            <div class="section-label">2. Branding &amp; Assets</div>
+            <p class="solution-desc">Add the client's domain to <code>remotePatterns</code> in <code>next.config.ts</code> for their product images.</p>
+            <div class="section-label">3. Database &amp; Seeding</div>
+            <p class="solution-desc">Rewrite <code>prisma/seed.ts</code> to include the client's actual categories and products.</p>
+            <div class="section-label">4. Third-Party Services</div>
+            <p class="solution-desc">Supabase project setup.</p>
+            <div class="section-label">5. Quick Steps</div>
+            <ul class="checklist">
+                <li>Set client DB URLs in <code>.env</code>.</li>
+                <li>Update <code>prisma/seed.ts</code> with real client data.</li>
+                <li>Run <code>npx prisma migrate dev</code> and <code>npx prisma db seed</code>.</li>
+            </ul>
+        </div>
     </main>
 
     <!-- SCRIPT FOR ACTIVE SIDEBAR HIGHLIGHTING -->

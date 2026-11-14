@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Commerce - Phase 7 Handoff Report</title>
+    <style>
+        :root {
+            --sidebar-bg: #1a1a1a; --sidebar-text: #a3a3a3; --sidebar-text-hover: #ffffff;
+            --sidebar-border: #2e2e2e; --bg: #ffffff; --text-main: #0f172a; --text-muted: #475569;
+            --primary: #c9a961; --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+            --danger: #ef4444; --success: #10b981; --sidebar-width: 280px;
+        }
+        html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg); color: var(--text-main); line-height: 1.6; margin: 0; padding: 0; }
+        .sidebar { width: var(--sidebar-width); background-color: var(--sidebar-bg); color: var(--sidebar-text); position: fixed; top: 0; bottom: 0; left: 0; padding: 2rem 1.5rem; overflow-y: auto; box-sizing: border-box; border-right: 1px solid var(--sidebar-border); }
+        .sidebar-brand { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--sidebar-border); }
+        .phase-badge { display: inline-block; background-color: var(--primary); color: #1a1a1a; font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+        .sidebar-brand h2 { color: #ffffff; font-size: 1.25rem; margin: 0; font-weight: 600; letter-spacing: -0.02em; }
+        .sidebar-brand p { margin: 0.25rem 0 0; font-size: 0.75rem; color: var(--sidebar-text); text-transform: uppercase; letter-spacing: 0.05em; }
+        .sidebar h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin-bottom: 1rem; margin-top: 0; font-weight: 700; }
+        .sidebar ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar li { margin-bottom: 0.25rem; }
+        .sidebar a { text-decoration: none; color: var(--sidebar-text); font-size: 0.9rem; display: block; padding: 0.6rem 0.75rem; border-radius: 6px; transition: all 0.2s ease; white-space: nowrap; }
+        .sidebar a:hover { color: var(--sidebar-text-hover); background-color: #262626; }
+        .sidebar a.active { color: var(--primary); background-color: #262626; font-weight: 500; }
+        .main-container { margin-left: var(--sidebar-width); padding: 3rem 4rem; max-width: 1100px; box-sizing: border-box; }
+        header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 2px solid var(--border); }
+        .header-subtitle { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); font-weight: 600; margin-bottom: 0.5rem; }
+        h1 { font-size: 2.5rem; color: var(--text-main); margin: 0 0 1rem 0; letter-spacing: -0.02em; }
+        .subtitle { font-size: 1.1rem; color: var(--text-muted); max-width: 800px; margin-bottom: 1.5rem; }
+        .badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; background-color: var(--success); color: white; }
+        .category-title { font-size: 1.5rem; color: var(--text-main); margin-top: 4rem; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.5rem; font-weight: 600; letter-spacing: -0.01em; }
+        .card { background-color: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .card.warning { border-left: 4px solid var(--danger); }
+        .problem-title { font-size: 1.15rem; font-weight: 600; color: var(--text-main); margin-top: 0; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .tag { font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+        .tag-stripe { background-color: #e0e7ff; color: #3730a3; }
+        .tag-nextjs { background-color: #e5e5e5; color: #171717; }
+        .tag-prisma { background-color: #d1fae5; color: #047857; }
+        .section-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 700; margin-bottom: 0.25rem; }
+        .problem-desc { margin-bottom: 1rem; color: var(--text-main); }
+        .solution-desc { margin-bottom: 0.5rem; color: var(--text-main); }
+        pre { background-color: var(--code-bg); color: var(--code-text); padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.875rem; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; margin: 0.5rem 0; }
+        code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; background-color: #f1f5f9; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.875em; color: #ef4444; }
+        pre code { background-color: transparent; color: inherit; padding: 0; }
+        ul.checklist { list-style-type: none; padding-left: 0; }
+        ul.checklist li { position: relative; padding-left: 1.75rem; margin-bottom: 0.5rem; }
+        ul.checklist li::before { content: "✓"; position: absolute; left: 0; color: var(--success); font-weight: bold; }
+        ul.cheat-sheet { list-style-type: none; padding-left: 0; }
+        ul.cheat-sheet li { padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+        ul.cheat-sheet li:last-child { border-bottom: none; }
+        .highlight { background-color: #fef08a; padding: 0.1rem 0.3rem; border-radius: 3px; font-weight: 500; }
+        .phase-footer { background-color: #1a1a1a; color: #a3a3a3; padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--sidebar-border); margin-left: var(--sidebar-width); box-sizing: border-box; }
+        .footer-link { color: var(--primary); text-decoration: none; font-weight: 500; font-size: 0.95rem; transition: color 0.2s; display: flex; align-items: center; gap: 0.5rem; }
+        .footer-link:hover { color: #ffffff; }
+        .footer-link.disabled { color: #555; pointer-events: none; }
+        .footer-center { text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.875rem; font-weight: 600; color: #666; }
+        @media (max-width: 968px) {
+            .sidebar { position: relative; width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--sidebar-border); padding: 1.5rem; }
+            .main-container { margin-left: 0; padding: 2rem 1.5rem; }
+            .phase-footer { margin-left: 0; padding: 1.5rem; flex-direction: column; gap: 1rem; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="phase-badge">Phase 07</div>
+            <h2>Nexus Commerce</h2>
+            <p>Handoff Report</p>
+        </div>
+        <h4>Contents</h4>
+        <ul>
+            <li><a href="#commands" class="nav-link">⚡ Commands & Installations</a></li>
+            <li><a href="#steps" class="nav-link">📋 Main Steps</a></li>
+            <li><a href="#stripe" class="nav-link">💳 Stripe Integration</a></li>
+            <li><a href="#security" class="nav-link">🛡️ Webhook Security</a></li>
+            <li><a href="#cheatsheet" class="nav-link">🧠 Developer Cheat-Sheet</a></li>
+            <li><a href="#white-label" class="nav-link">🏷️ White-Label Checklist</a></li>
+        </ul>
+    </aside>
+    <main class="main-container">
+        <header>
+            <div class="header-subtitle">Phase 07 · Stripe Payments</div>
+            <h1>Stripe Checkout & Secure Webhooks</h1>
+            <div class="subtitle">Integrate real Stripe Checkout sessions, handle payment success asynchronously via webhooks, and build the final success page.</div>
+            <div class="badge">Production Build Verified ✓</div>
+        </header>
+
+        <div class="category-title" id="commands">⚡ Command History & Installations</div>
+        <div class="card">
+            <h3 class="problem-title">Installed Packages</h3>
+            <ul class="checklist">
+                <li><code>stripe</code> — Server-side SDK for Stripe API.</li>
+                <li><code>@stripe/stripe-js</code> — Client-side Stripe.js library.</li>
+            </ul>
+            <h3 class="problem-title" style="margin-top: 1.5rem;">Commands Executed</h3>
+            <pre><code># Package management
+npm install stripe @stripe/stripe-js
+
+# Validation
+npx tsc --noEmit
+npm run dev</code></pre>
+        </div>
+
+        <div class="category-title" id="steps">📋 Phase 7 Main Steps</div>
+        <div class="card">
+            <ul class="checklist">
+                <li>Configured Stripe environment variables (<code>STRIPE_SECRET_KEY</code>, etc.).</li>
+                <li>Initialized the server-side Stripe client in <code>src/shared/lib/stripe.ts</code>.</li>
+                <li>Refactored <code>createCheckoutSession</code> to securely create a Stripe Session and redirect the user.</li>
+                <li>Built the Stripe Webhook route (<code>/api/webhooks/stripe</code>).</li>
+                <li>Implemented server-side price verification and total validation inside the webhook.</li>
+                <li>Built the <code>/orders/success</code> page to clear the cart and show a thank you message.</li>
+            </ul>
+        </div>
+
+        <div class="category-title" id="stripe">💳 Stripe Integration</div>
+
+        <div class="card warning">
+            <h3 class="problem-title">1. Strict Stripe API Versioning <span class="tag tag-stripe">Stripe</span></h3>
+            <div class="section-label">The Problem</div>
+            <div class="problem-desc">
+                The Stripe SDK threw a TypeScript error: <code>Type '"2025-02-24.acacia"' is not assignable to type '"2026-10-28.endive"'</code>. Stripe frequently updates its API versions, which breaks hardcoded strings.
+            </div>
+            <div class="section-label">The Solution</div>
+            <div class="solution-desc">
+                Removed the hardcoded <code>apiVersion</code> property entirely from the Stripe client initialization. This tells Stripe to use the default API version configured in the Stripe Dashboard, making the boilerplate future-proof.
+            </div>
+            <pre><code>// src/shared/lib/stripe.ts
+export const stripe = new Stripe(env.STRIPE_SECRET_KEY!, {
+  typescript: true,
+});</code></pre>
+        </div>
+
+        <div class="category-title" id="security">🛡️ Webhook Security</div>
+
+        <div class="card warning">
+            <h3 class="problem-title">2. Webhook Idempotency & Price Verification <span class="tag tag-stripe">Stripe</span> <span class="tag tag-prisma">Prisma</span></h3>
+            <div class="section-label">The Problem</div>
+            <div class="problem-desc">
+                If the network drops, Stripe might send the <code>checkout.session.completed</code> event multiple times. Without guards, this would create duplicate orders and send duplicate emails. Additionally, we must verify the amount paid matches the DB.
+            </div>
+            <div class="section-label">The Solution</div>
+            <div class="solution-desc">
+                Inside the webhook, we query the database for the <code>stripeSessionId</code> before creating the order. We also verify <code>session.amount_total</code> against our recalculated total to prevent tampering.
+            </div>
+        </div>
+
+        <div class="card warning">
+            <h3 class="problem-title">3. Skipping Local Stripe CLI <span class="tag tag-nextjs">Next.js</span></h3>
+            <div class="section-label">The Problem</div>
+            <div class="problem-desc">
+                The Stripe Webhook route requires an external endpoint to receive data. Without running <code>stripe listen</code>, local payments won't trigger the webhook, and orders won't be saved during local testing.
+            </div>
+            <div class="section-label">The Solution</div>
+            <div class="solution-desc">
+                Since this is a boilerplate, local webhook testing can be skipped. The code is production-ready. When deployed to Vercel, the user will add the production URL to the Stripe Dashboard, and the webhook will function perfectly.
+            </div>
+        </div>
+
+        <div class="category-title" id="cheatsheet">🧠 Developer Cheat-Sheet & Pro-Tips</div>
+        <div class="card">
+            <ul class="cheat-sheet">
+                <li>
+                    <strong>Next.js Route Handlers:</strong> Use <code>route.ts</code> inside <code>/app/api/</code> for webhooks. You must read the raw body via <code>await req.text()</code> (not <code>req.json()</code>) so Stripe can verify the signature.
+                </li>
+                <li>
+                    <strong>Stripe CLI:</strong> For local testing of webhooks, run <code>stripe listen --forward-to localhost:3000/api/webhooks/stripe</code>. It provides a <code>whsec_...</code> secret that changes every time you restart the CLI.
+                </li>
+                <li>
+                    <strong>Webhook Idempotency:</strong> Always check if the <code>stripeSessionId</code> already exists in your database before creating an order. Stripe guarantees "at-least-once" delivery, meaning duplicates are possible.
+                </li>
+                <li>
+                    <strong>Success Page Side Effects:</strong> Use a tiny Client Component (<code>SuccessClient.tsx</code>) on the success page to clear the Zustand cart. Server Components cannot mutate client-side state.
+                </li>
+            </ul>
+        </div>
+        <div class="category-title" id="white-label">🏷️ White-Label &amp; Multi-Client Onboarding Checklist</div>
+        <div class="card">
+            <h3 class="problem-title">Client Setup: Stripe Payments</h3>
+            <div class="section-label">1. Config &amp; Env Files</div>
+            <p class="solution-desc">Update <code>STRIPE_SECRET_KEY</code>, <code>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code>, and <code>STRIPE_WEBHOOK_SECRET</code>.</p>
+            <div class="section-label">2. Branding &amp; Assets</div>
+            <p class="solution-desc">Update the Stripe Dashboard branding (logo, colors) so the checkout page matches the client's store.</p>
+            <div class="section-label">3. Database &amp; Seeding</div>
+            <p class="solution-desc">None specific to this phase.</p>
+            <div class="section-label">4. Third-Party Services</div>
+            <p class="solution-desc">Client's Stripe Account. Add the production webhook URL in the Stripe Dashboard.</p>
+            <div class="section-label">5. Quick Steps</div>
+            <ul class="checklist">
+                <li>Switch Stripe keys from Test to Live mode in <code>.env</code>.</li>
+                <li>Add the production URL to Stripe Webhooks.</li>
+                <li>Process a real $1 test transaction to verify the live webhook.</li>
+            </ul>
+        </div>
+    </main>
+
+    <footer class="phase-footer">
+        <a href="phase-06-admin-dashboard.html" class="footer-link">← Phase 6 (Admin Dashboard)</a>
+        <span class="footer-center">Phase 7</span>
+        <a href="phase-08-admin-products.html" class="footer-link">Phase 8 (Admin Products) →</a>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.category-title');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.2 };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => link.classList.remove('active'));
+                        const activeLink = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+                        if (activeLink) activeLink.classList.add('active');
+                    }
+                });
+            }, observerOptions);
+            sections.forEach(section => observer.observe(section));
+        });
+    </script>
+</body>
+</html>

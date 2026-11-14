@@ -79,6 +79,7 @@
             <li><a href="#i18n" class="nav-link">🌍 i18n & Emails</a></li>
             <li><a href="#tracking" class="nav-link">🚚 Order Tracking</a></li>
             <li><a href="#cheatsheet" class="nav-link">🧠 Developer Cheat-Sheet</a></li>
+            <li><a href="#white-label" class="nav-link">🏷️ White-Label Checklist</a></li>
         </ul>
     </aside>
     <main class="main-container">
@@ -164,6 +165,24 @@ npm run dev</code></pre>
                 <li>
                     <strong>Preventing 404s:</strong> When building a tracking page, always use <code>notFound()</code> if the order ID doesn't exist in the database. This prevents server errors and gives a proper 404 page.
                 </li>
+            </ul>
+        </div>
+        <div class="category-title" id="white-label">🏷️ White-Label &amp; Multi-Client Onboarding Checklist</div>
+        <div class="card">
+            <h3 class="problem-title">Client Setup: Emails &amp; Tracking</h3>
+            <div class="section-label">1. Config &amp; Env Files</div>
+            <p class="solution-desc">Update <code>EMAIL_PROVIDER</code>, <code>EMAIL_FROM</code>, and <code>RESEND_API_KEY</code> in <code>.env</code>.</p>
+            <div class="section-label">2. Branding &amp; Assets</div>
+            <p class="solution-desc">Update the primary colors and logo URL inside <code>src/shared/lib/email/templates/OrderConfirmation.tsx</code>.</p>
+            <div class="section-label">3. Database &amp; Seeding</div>
+            <p class="solution-desc">None specific to this phase.</p>
+            <div class="section-label">4. Third-Party Services</div>
+            <p class="solution-desc">Client's Resend account or SMTP provider.</p>
+            <div class="section-label">5. Quick Steps</div>
+            <ul class="checklist">
+                <li>Set client email credentials in <code>.env</code>.</li>
+                <li>Update the email template styling.</li>
+                <li>Send a test email to verify deliverability.</li>
             </ul>
         </div>
     </main>

@@ -78,6 +78,7 @@
             <li><a href="#auth" class="nav-link">🛡️ Authentication & Security</a></li>
             <li><a href="#i18n" class="nav-link">🌍 i18n & Admin UI</a></li>
             <li><a href="#cheatsheet" class="nav-link">🧠 Developer Cheat-Sheet</a></li>
+            <li><a href="#white-label" class="nav-link">🏷️ White-Label Checklist</a></li>
         </ul>
     </aside>
     <main class="main-container">
@@ -188,12 +189,30 @@ npx prisma db seed</code></pre>
                 </li>
             </ul>
         </div>
+        <div class="category-title" id="white-label">🏷️ White-Label &amp; Multi-Client Onboarding Checklist</div>
+        <div class="card">
+            <h3 class="problem-title">Client Setup: Admin Dashboard</h3>
+            <div class="section-label">1. Config &amp; Env Files</div>
+            <p class="solution-desc">Generate a new, secure <code>AUTH_SECRET</code> for the client's environment.</p>
+            <div class="section-label">2. Branding &amp; Assets</div>
+            <p class="solution-desc">Update the Admin logo/name in the <code>"AdminLayout"</code> namespace.</p>
+            <div class="section-label">3. Database &amp; Seeding</div>
+            <p class="solution-desc">Change the default admin email and password inside <code>prisma/seed.ts</code> to the client's actual credentials.</p>
+            <div class="section-label">4. Third-Party Services</div>
+            <p class="solution-desc">None specific to this phase.</p>
+            <div class="section-label">5. Quick Steps</div>
+            <ul class="checklist">
+                <li>Update admin credentials in <code>prisma/seed.ts</code>.</li>
+                <li>Run <code>npx prisma db seed</code>.</li>
+                <li>Set a secure <code>AUTH_SECRET</code> in <code>.env</code>.</li>
+            </ul>
+        </div>
     </main>
 
     <footer class="phase-footer">
         <a href="phase-05-order-tracking.html" class="footer-link">← Phase 5 (Order Emails)</a>
         <span class="footer-center">Phase 6</span>
-        <a href="#" class="footer-link disabled">Phase 7 (Stripe) →</a>
+        <a href="phase-07-stripe-checkout.html" class="footer-link">Phase 7 (Stripe) →</a>
     </footer>
 
     <script>

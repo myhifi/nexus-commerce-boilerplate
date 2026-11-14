@@ -79,6 +79,7 @@
             <li><a href="#db" class="nav-link">🗄️ Database & Supabase</a></li>
             <li><a href="#react" class="nav-link">⚛️ React & Refactoring</a></li>
             <li><a href="#cheatsheet" class="nav-link">🧠 Developer Cheat-Sheet</a></li>
+            <li><a href="#white-label" class="nav-link">🏷️ White-Label Checklist</a></li>
         </ul>
     </aside>
     <main class="main-container">
@@ -171,6 +172,23 @@ npm run dev</code></pre>
                 <li>
                     <strong>Decoupling DB from UI:</strong> Never pass raw Prisma models directly to client components. Always map them to a specific DTO (Data Transfer Object) that perfectly matches the component's props.
                 </li>
+            </ul>
+        </div>
+        <div class="category-title" id="white-label">🏷️ White-Label &amp; Multi-Client Onboarding Checklist</div>
+        <div class="card">
+            <h3 class="problem-title">Client Setup: Product Details</h3>
+            <div class="section-label">1. Config &amp; Env Files</div>
+            <p class="solution-desc">None specific to this phase.</p>
+            <div class="section-label">2. Branding &amp; Assets</div>
+            <p class="solution-desc">If the client sells physical goods with different variant names (e.g., "Size/Color" vs "Weight/Flavor"), update the <code>"Shop"</code> namespace in the translation files.</p>
+            <div class="section-label">3. Database &amp; Seeding</div>
+            <p class="solution-desc">Ensure the client's <code>prisma/seed.ts</code> includes variants and modifier groups if they are a restaurant or clothing store.</p>
+            <div class="section-label">4. Third-Party Services</div>
+            <p class="solution-desc">None specific to this phase.</p>
+            <div class="section-label">5. Quick Steps</div>
+            <ul class="checklist">
+                <li>Verify the client's product schema matches their needs.</li>
+                <li>Update variant/modifier terminology in translations.</li>
             </ul>
         </div>
     </main>

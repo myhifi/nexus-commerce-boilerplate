@@ -2,11 +2,9 @@
 
 import { z } from "zod";
 import { prisma } from "@/shared/lib/prisma";
-import { storeConfig } from "@/shared/config/store.config";
-import { revalidatePath } from "next/cache";
-import { sendOrderConfirmation } from "@/shared/lib/email/send";
+import { stripe } from "@/shared/lib/stripe";
+import { env } from "@/shared/env";
 
-// 1. Define the strict shape of the incoming data
 const checkoutSchema = z.object({
   guestName: z.string().min(2, "Name is too short"),
   guestEmail: z.string().email("Invalid email address"),
@@ -24,14 +22,13 @@ const checkoutSchema = z.object({
 export type CheckoutState = {
   success: boolean;
   error?: string;
-  orderId?: string;
+  url?: string; // Changed from orderId to url for Stripe redirect
 };
 
-export async function createOrder(
+export async function createCheckoutSession(
   prevState: CheckoutState,
   formData: FormData
 ): Promise<CheckoutState> {
-  // 2. Extract items from the hidden input (JSON string)
   let parsedItems = [];
   try {
     const rawItems = formData.get("items") as string;
@@ -42,7 +39,6 @@ export async function createOrder(
 
   const locale = (formData.get("locale") as string) || "en";
 
-  // 3. Validate the form data
   const validatedFields = checkoutSchema.safeParse({
     guestName: formData.get("guestName"),
     guestEmail: formData.get("guestEmail"),
@@ -62,89 +58,67 @@ export async function createOrder(
     validatedFields.data;
 
   try {
-    // 4. SECURITY: Re-fetch real prices from the database
+    // 1. Re-fetch real prices from the database
     const productIds = items.map((i) => i.productId);
     const dbProducts = await prisma.product.findMany({
       where: { id: { in: productIds } },
       include: { variants: true },
     });
 
-    let calculatedTotal = 0;
-    const orderItemsToCreate = [];
-    const emailItems = []; // Array for the email template
+    const lineItems = [];
 
     for (const item of items) {
       const dbProduct = dbProducts.find((p) => p.id === item.productId);
       if (!dbProduct) throw new Error(`Product not found: ${item.productId}`);
 
-      let priceAtOrder = Number(dbProduct.price);
+      let unitPrice = Number(dbProduct.price);
       let variantName = null;
 
-      // If a variant was selected, use the variant's real price
       if (item.variantId) {
-        const dbVariant = dbProduct.variants.find(
-          (v) => v.id === item.variantId
-        );
+        const dbVariant = dbProduct.variants.find((v) => v.id === item.variantId);
         if (!dbVariant) throw new Error(`Variant not found: ${item.variantId}`);
-        priceAtOrder = Number(dbVariant.price);
+        unitPrice = Number(dbVariant.price);
         variantName = dbVariant.name;
       }
 
-      calculatedTotal += priceAtOrder * item.quantity;
-
-      orderItemsToCreate.push({
-        productId: item.productId,
-        variantId: item.variantId,
+      lineItems.push({
+        price_data: {
+          currency: "usd", // You can change this to env.NEXT_PUBLIC_CURRENCY
+          product_data: {
+            name: dbProduct.name + (variantName ? ` (${variantName})` : ""),
+            images: dbProduct.imageUrl ? [dbProduct.imageUrl] : [],
+          },
+          unit_amount: Math.round(unitPrice * 100), // Stripe uses cents
+        },
         quantity: item.quantity,
-        priceAtOrder: priceAtOrder,
-      });
-
-      // Map to the shape expected by the Email template
-      emailItems.push({
-        name: dbProduct.name,
-        variantName: variantName,
-        modifiers: [], // Modifiers are not passed through this basic checkout yet
-        quantity: item.quantity,
-        priceAtOrder: priceAtOrder,
       });
     }
 
-    // 5. Create the order and order items in a single transaction
-    const order = await prisma.order.create({
-      data: {
+    // 2. Create the Stripe Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      line_items: lineItems,
+      mode: "payment",
+      success_url: `${env.NEXT_PUBLIC_APP_URL}/${locale}/orders/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${env.NEXT_PUBLIC_APP_URL}/${locale}/cart`,
+      customer_email: guestEmail,
+      // 3. Pass metadata to the Webhook
+      metadata: {
         guestName,
         guestEmail,
         guestPhone,
         shippingAddress,
-        fulfillmentType: "SHIPPING",
-        totalAmount: calculatedTotal,
-        currency: storeConfig.currency,
-        items: {
-          create: orderItemsToCreate,
-        },
+        locale,
+        // Store cart items as a JSON string so the webhook knows what to save
+        cartItems: JSON.stringify(items), 
       },
     });
 
-    // 6. Send the confirmation email (using the Console provider by default)
-    await sendOrderConfirmation({
-      to: guestEmail,
-      guestName,
-      orderId: order.id,
-      items: emailItems,
-      subtotal: calculatedTotal, // In this basic version, subtotal = total
-      shippingAmount: 0,
-      totalAmount: calculatedTotal,
-      currency: storeConfig.currency,
-      fulfillmentType: "SHIPPING",
-      shippingAddress: shippingAddress,
-      tableNumber: null,
-      locale: locale,
-    });
+    if (!session.url) {
+      throw new Error("Failed to create Stripe session URL");
+    }
 
-    // 7. Clear the cart cache on the client
-    revalidatePath("/cart");
-
-    return { success: true, orderId: order.id };
+    // 4. Return the URL to redirect the client
+    return { success: true, url: session.url };
 
   } catch (error) {
     console.error("Checkout Error:", error);
