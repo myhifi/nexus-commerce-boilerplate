@@ -249,10 +249,11 @@ This is a personal commercial boilerplate. If you find a bug or have a suggestio
 ## 📜 License
 
 **Commercial License.** This boilerplate is designed to be customized and deployed for multiple clients.
+
 You may **not**:
 
-- ❌ Use it for unlimited client projects
-- ❌ Modify it freely for each client
+- ❌ Use it for client projects
+- ❌ Modify it for any client
 - ❌ Sell the resulting applications to clients
 - ❌ Resell the boilerplate itself as a template
 - ❌ Redistribute the source code publicly
