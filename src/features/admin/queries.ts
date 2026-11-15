@@ -1,4 +1,5 @@
 import "server-only";
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/shared/lib/prisma";
 
 export async function getAllOrders() {
@@ -98,3 +99,27 @@ export async function getDashboardStats() {
     weeklyRevenue,
   };
 }
+
+export async function getSettings(): Promise<Record<string, string>> {
+  const settings = await prisma.setting.findMany();
+  return settings.reduce((acc, curr) => {
+    acc[curr.key] = curr.value;
+    return acc;
+  }, {} as Record<string, string>);
+}
+
+/**
+ * Cached version for reading store branding in the layout/Navbar.
+ * Invalidated via revalidateTag("store-settings") after saving settings.
+ */
+export const getStoreSettings = unstable_cache(
+  async (): Promise<Record<string, string>> => {
+    const settings = await prisma.setting.findMany();
+    return settings.reduce((acc, curr) => {
+      acc[curr.key] = curr.value;
+      return acc;
+    }, {} as Record<string, string>);
+  },
+  ["store-settings"],
+  { tags: ["store-settings"] },
+);

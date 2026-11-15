@@ -964,5 +964,24 @@
     "chartMockHint": "Mocked data for visual representation",
     "noOrders": "No orders yet.",
     "noProducts": "No sales data yet."
+  },
+  "AdminSettings": {
+    "title": "Settings",
+    "subtitle": "Manage your store information, shipping, and social links.",
+    "saved": "✓ Settings saved successfully!",
+    "storeInfo": "Store Information",
+    "storeName": "Store Name",
+    "supportEmail": "Support Email",
+    "contactSocial": "Contact & Social Media",
+    "whatsappNumber": "WhatsApp Number",
+    "instagramUrl": "Instagram URL",
+    "facebookUrl": "Facebook URL",
+    "twitterUrl": "Twitter / X URL",
+    "shipping": "Shipping Rules",
+    "shippingFlatRate": "Flat Shipping Rate",
+    "freeShippingThreshold": "Free Shipping Threshold",
+    "shippingHint": "Shipping is free when order total exceeds this amount.",
+    "save": "Save Settings",
+    "saving": "Saving..."
   }
 }

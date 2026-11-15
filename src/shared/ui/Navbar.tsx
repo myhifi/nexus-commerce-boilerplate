@@ -4,7 +4,6 @@ import { useState, useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 import { Menu as MenuIcon, ShoppingBag, X } from "lucide-react";
 import { Link, usePathname } from "@/shared/i18n/navigation";
-import { storeConfig } from "@/shared/config/store.config";
 import type { BusinessType } from "@/shared/config/store.config";
 import { useCartStore } from "@/features/cart/store";
 import { LanguageSwitcher } from "@/shared/ui/LanguageSwitcher";
@@ -39,9 +38,10 @@ const RESTAURANT_LINKS: NavLink[] = [
 
 type NavbarProps = {
   businessType: BusinessType;
+  storeName: string;
 };
 
-export function Navbar({ businessType }: NavbarProps) {
+export function Navbar({ businessType, storeName }: NavbarProps) {
   const t = useTranslations("Navbar");
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -69,7 +69,7 @@ export function Navbar({ businessType }: NavbarProps) {
           href="/"
           className="shrink-0 text-lg font-bold tracking-tight text-foreground transition-opacity hover:opacity-80"
         >
-          {storeConfig.branding.name}
+          {storeName}
         </Link>
 
         {/* Desktop links */}

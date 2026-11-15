@@ -10,6 +10,7 @@ import { notFound } from "next/navigation";
 import { routing } from "@/shared/i18n/routing";
 import { storeConfig } from "@/shared/config/store.config";
 import { Navbar } from "@/shared/ui/Navbar";
+import { getStoreSettings } from "@/features/admin/queries";
 
 type Locale = (typeof routing.locales)[number];
 
@@ -22,12 +23,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
+  const settings = await getStoreSettings();
+  const storeName = settings.storeName || storeConfig.branding.name;
 
   return {
     metadataBase: new URL(SITE_URL),
     title: {
       default: t("siteTitle"),
-      template: `%s | ${storeConfig.branding.name}`,
+      template: `%s | ${storeName}`,
     },
     description: t("siteDescription"),
   };
@@ -56,13 +59,18 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   const messages = await getMessages();
+  const settings = await getStoreSettings();
+  const storeName = settings.storeName || storeConfig.branding.name;
   const dir = locale === "ar" ? "rtl" : "ltr";
 
   return (
     <html lang={locale} dir={dir} className="h-full antialiased">
       <body className="min-h-full bg-background text-foreground">
         <NextIntlClientProvider messages={messages} locale={locale}>
-          <Navbar businessType={storeConfig.businessType} />
+          <Navbar
+            businessType={storeConfig.businessType}
+            storeName={storeName}
+          />
           {children}
         </NextIntlClientProvider>
       </body>
