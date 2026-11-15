@@ -31,3 +31,15 @@ export async function getAdminProductById(id: string) {
     where: { id },
   });
 }
+
+export async function getAdminUsers() {
+  return prisma.user.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function getAdminUserById(id: string) {
+  return prisma.user.findUnique({
+    where: { id },
+  });
+}
