@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/shared/i18n/navigation";
-import { Package, ShoppingCart, Settings, LogOut } from "lucide-react";
+import { Layers, Package, ShoppingCart, Settings, LogOut } from "lucide-react";
 import { logoutAction } from "@/features/auth/actions";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -21,6 +21,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </Link>
           <Link href="/admin/products" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted">
             <Package className="h-4 w-4" /> {t("products")}
+          </Link>
+          <Link href="/admin/categories" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted">
+            <Layers className="h-4 w-4" /> {t("categories")}
           </Link>
           <Link href="/admin/settings" className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted">
             <Settings className="h-4 w-4" /> {t("settings")}

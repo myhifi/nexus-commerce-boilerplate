@@ -17,7 +17,12 @@ export async function getAdminProducts() {
 
 export async function getAdminCategories() {
   return prisma.category.findMany({
-    orderBy: { name: "asc" },
+    orderBy: { displayOrder: "asc" },
+    include: {
+      _count: {
+        select: { products: true },
+      },
+    },
   });
 }
 

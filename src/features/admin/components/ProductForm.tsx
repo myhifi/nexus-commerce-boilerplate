@@ -9,6 +9,7 @@ import type { ProductActionState } from "@/features/admin/product-actions";
 type Category = {
   id: string;
   name: string;
+  nameEn?: string | null;
 };
 
 type Product = {
@@ -36,6 +37,8 @@ const initialState: ProductActionState = { success: false };
 export function ProductForm({ categories, product, action }: Props) {
   const t = useTranslations("AdminProducts");
   const locale = useLocale();
+  const getCategoryName = (category: Category) =>
+    locale === "en" && category.nameEn ? category.nameEn : category.name;
   const [state, formAction, isPending] = useActionState(action, initialState);
   const isEdit = !!product;
 
@@ -104,7 +107,7 @@ export function ProductForm({ categories, product, action }: Props) {
             >
               <option value="" disabled>{t("selectCategory")}</option>
               {categories.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
+                <option key={c.id} value={c.id}>{getCategoryName(c)}</option>
               ))}
             </select>
           </div>

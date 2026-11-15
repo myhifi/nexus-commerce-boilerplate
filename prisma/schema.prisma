@@ -42,7 +42,7 @@ model Product {
   updatedAt      DateTime @updatedAt
   
   categoryId     String
-  category       Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  category       Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   
   variants       ProductVariant[]
   modifiers      ModifierGroup[]

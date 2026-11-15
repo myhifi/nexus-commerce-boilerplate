@@ -23,6 +23,8 @@ export default async function AdminProductsPage({
 
   const t = await getTranslations("AdminProducts");
   const products = await getAdminProducts();
+  const getDisplayName = (product: (typeof products)[number]) =>
+    locale === "en" && product.nameEn ? product.nameEn : product.name;
 
   const formatMoney = (amount: number) =>
     new Intl.NumberFormat(locale, {
@@ -88,7 +90,7 @@ export default async function AdminProductsPage({
                     </div>
                   </td>
                   <td className="px-6 py-4 font-medium text-foreground">
-                    {product.name}
+                    {getDisplayName(product)}
                   </td>
                   <td className="px-6 py-4 text-muted-foreground">
                     {product.category.name}

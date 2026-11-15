@@ -842,6 +842,7 @@
     "brand": "Nexus Admin",
     "orders": "Orders",
     "products": "Products",
+    "categories": "Categories",
     "settings": "Settings",
     "signOut": "Sign Out"
   },
@@ -888,5 +889,30 @@
     "cancel": "Cancel",
     "saveChanges": "Save Changes",
     "createProduct": "Create Product"
+  },
+  "AdminCategories": {
+    "title": "Categories",
+    "total": "{count} Total",
+    "addNew": "+ Add Category",
+    "name": "Name",
+    "slug": "Slug",
+    "order": "Display Order",
+    "productsCount": "Products",
+    "actions": "Actions",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteConfirm": "Are you sure you want to delete this category?",
+    "empty": "No categories found.",
+    "createTitle": "Create New Category",
+    "editTitle": "Edit Category",
+    "backToCategories": "Back to Categories",
+    "nameLabel": "Name (Arabic)",
+    "nameEnLabel": "Name (English)",
+    "slugLabel": "Slug (URL)",
+    "orderLabel": "Display Order",
+    "descriptionLabel": "Description (optional)",
+    "cancel": "Cancel",
+    "saveChanges": "Save Changes",
+    "createCategory": "Create Category"
   }
 }

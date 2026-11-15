@@ -842,6 +842,7 @@
     "brand": "إدارة نيكسوس",
     "orders": "الطلبات",
     "products": "المنتجات",
+    "categories": "التصنيفات",
     "settings": "الإعدادات",
     "signOut": "تسجيل الخروج"
   },
@@ -888,5 +889,30 @@
     "cancel": "إلغاء",
     "saveChanges": "حفظ التعديلات",
     "createProduct": "إنشاء المنتج"
+  },
+  "AdminCategories": {
+    "title": "التصنيفات",
+    "total": "الإجمالي {count}",
+    "addNew": "+ إضافة تصنيف",
+    "name": "الاسم",
+    "slug": "المعرف",
+    "order": "ترتيب العرض",
+    "productsCount": "المنتجات",
+    "actions": "الإجراءات",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "deleteConfirm": "هل أنت متأكد من حذف هذا التصنيف؟",
+    "empty": "لا توجد تصنيفات.",
+    "createTitle": "إنشاء تصنيف جديد",
+    "editTitle": "تعديل التصنيف",
+    "backToCategories": "العودة إلى التصنيفات",
+    "nameLabel": "الاسم (بالعربية)",
+    "nameEnLabel": "الاسم (بالإنجليزية)",
+    "slugLabel": "المعرف (Slug)",
+    "orderLabel": "ترتيب العرض",
+    "descriptionLabel": "الوصف (اختياري)",
+    "cancel": "إلغاء",
+    "saveChanges": "حفظ التعديلات",
+    "createCategory": "إنشاء التصنيف"
   }
 }
