@@ -267,4 +267,3 @@ For questions about customizing Nexus Commerce for a specific client, refer to t
 ---
 
 Built with ❤️ and a lot of patience.
-```
