@@ -844,6 +844,7 @@
     "products": "Products",
     "categories": "Categories",
     "users": "Staff",
+    "overview": "Overview",
     "settings": "Settings",
     "signOut": "Sign Out"
   },
@@ -947,5 +948,21 @@
     "cancel": "Cancel",
     "saveChanges": "Save Changes",
     "createUser": "Create Staff"
+  },
+  "AdminDashboard": {
+    "title": "Dashboard Overview",
+    "subtitle": "Welcome back. Here is what is happening in your store.",
+    "revenue": "Total Revenue",
+    "orders": "Total Orders",
+    "products": "Total Products",
+    "staff": "Total Staff",
+    "recentOrders": "Recent Orders",
+    "viewAll": "View All",
+    "topProducts": "Top Selling Products",
+    "sold": "{count} sold",
+    "weeklyRevenue": "Weekly Revenue",
+    "chartMockHint": "Mocked data for visual representation",
+    "noOrders": "No orders yet.",
+    "noProducts": "No sales data yet."
   }
 }

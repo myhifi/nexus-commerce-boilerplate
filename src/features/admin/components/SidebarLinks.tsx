@@ -2,7 +2,14 @@
 
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/shared/i18n/navigation";
-import { ShoppingCart, Package, Layers, Users, Settings } from "lucide-react";
+import {
+  LayoutDashboard,
+  ShoppingCart,
+  Package,
+  Layers,
+  Users,
+  Settings,
+} from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 
 export function SidebarLinks() {
@@ -10,6 +17,7 @@ export function SidebarLinks() {
   const pathname = usePathname();
 
   const links = [
+    { href: "/admin", label: t("overview"), icon: LayoutDashboard },
     { href: "/admin/orders", label: t("orders"), icon: ShoppingCart },
     { href: "/admin/products", label: t("products"), icon: Package },
     { href: "/admin/categories", label: t("categories"), icon: Layers },
@@ -22,7 +30,9 @@ export function SidebarLinks() {
       {links.map((link) => {
         const Icon = link.icon;
         // Check if current path matches or is a sub-path (e.g., /admin/users/new)
-        const isActive = pathname.startsWith(link.href);
+        const isActive =
+          pathname === link.href ||
+          (link.href !== "/admin" && pathname.startsWith(`${link.href}/`));
         
         return (
           <Link
