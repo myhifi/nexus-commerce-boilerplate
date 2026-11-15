@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Commerce - Phase 12 Handoff Report</title>
+    <style>
+        :root {
+            --sidebar-bg: #1a1a1a; --sidebar-text: #a3a3a3; --sidebar-text-hover: #ffffff;
+            --sidebar-border: #2e2e2e; --bg: #ffffff; --text-main: #0f172a; --text-muted: #475569;
+            --primary: #c9a961; --border: #e2e8f0; --code-bg: #1e293b; --code-text: #e2e8f0;
+            --danger: #ef4444; --success: #10b981; --sidebar-width: 280px;
+        }
+        html { scroll-behavior: smooth; scroll-padding-top: 2rem; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg); color: var(--text-main); line-height: 1.6; margin: 0; padding: 0; }
+        .sidebar { width: var(--sidebar-width); background-color: var(--sidebar-bg); color: var(--sidebar-text); position: fixed; top: 0; bottom: 0; left: 0; padding: 2rem 1.5rem; overflow-y: auto; box-sizing: border-box; border-right: 1px solid var(--sidebar-border); }
+        .sidebar-brand { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--sidebar-border); }
+        .phase-badge { display: inline-block; background-color: var(--primary); color: #1a1a1a; font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+        .sidebar-brand h2 { color: #ffffff; font-size: 1.25rem; margin: 0; font-weight: 600; letter-spacing: -0.02em; }
+        .sidebar-brand p { margin: 0.25rem 0 0; font-size: 0.75rem; color: var(--sidebar-text); text-transform: uppercase; letter-spacing: 0.05em; }
+        .sidebar h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin-bottom: 1rem; margin-top: 0; font-weight: 700; }
+        .sidebar ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar li { margin-bottom: 0.25rem; }
+        .sidebar a { text-decoration: none; color: var(--sidebar-text); font-size: 0.9rem; display: block; padding: 0.6rem 0.75rem; border-radius: 6px; transition: all 0.2s ease; white-space: nowrap; }
+        .sidebar a:hover { color: var(--sidebar-text-hover); background-color: #262626; }
+        .sidebar a.active { color: var(--primary); background-color: #262626; font-weight: 500; }
+        .main-container { margin-left: var(--sidebar-width); padding: 3rem 4rem; max-width: 1100px; box-sizing: border-box; }
+        header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 2px solid var(--border); }
+        .header-subtitle { font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary); font-weight: 600; margin-bottom: 0.5rem; }
+        h1 { font-size: 2.5rem; color: var(--text-main); margin: 0 0 1rem 0; letter-spacing: -0.02em; }
+        .subtitle { font-size: 1.1rem; color: var(--text-muted); max-width: 800px; margin-bottom: 1.5rem; }
+        .badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; background-color: var(--success); color: white; }
+        .category-title { font-size: 1.5rem; color: var(--text-main); margin-top: 4rem; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.5rem; font-weight: 600; letter-spacing: -0.01em; }
+        .card { background-color: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .card.warning { border-left: 4px solid var(--danger); }
+        .card.success { border-left: 4px solid var(--success); }
+        .problem-title { font-size: 1.15rem; font-weight: 600; color: var(--text-main); margin-top: 0; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .tag { font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+        .tag-react { background-color: #fef08a; color: #854d0e; }
+        .tag-nextjs { background-color: #e5e5e5; color: #171717; }
+        .tag-prisma { background-color: #d1fae5; color: #047857; }
+        .section-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 700; margin-bottom: 0.25rem; }
+        .problem-desc { margin-bottom: 1rem; color: var(--text-main); }
+        .solution-desc { margin-bottom: 0.5rem; color: var(--text-main); }
+        pre { background-color: var(--code-bg); color: var(--code-text); padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.875rem; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; margin: 0.5rem 0; }
+        code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; background-color: #f1f5f9; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.875em; color: #ef4444; }
+        pre code { background-color: transparent; color: inherit; padding: 0; }
+        ul.checklist { list-style-type: none; padding-left: 0; }
+        ul.checklist li { position: relative; padding-left: 1.75rem; margin-bottom: 0.5rem; }
+        ul.checklist li::before { content: "✓"; position: absolute; left: 0; color: var(--success); font-weight: bold; }
+        ul.cheat-sheet { list-style-type: none; padding-left: 0; }
+        ul.cheat-sheet li { padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+        ul.cheat-sheet li:last-child { border-bottom: none; }
+        .highlight { background-color: #fef08a; padding: 0.1rem 0.3rem; border-radius: 3px; font-weight: 500; }
+        .phase-footer { background-color: #1a1a1a; color: #a3a3a3; padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--sidebar-border); margin-left: var(--sidebar-width); box-sizing: border-box; }
+        .footer-link { color: var(--primary); text-decoration: none; font-weight: 500; font-size: 0.95rem; transition: color 0.2s; display: flex; align-items: center; gap: 0.5rem; }
+        .footer-link:hover { color: #ffffff; }
+        .footer-link.disabled { color: #555; pointer-events: none; }
+        .footer-center { text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.875rem; font-weight: 600; color: #666; }
+        @media (max-width: 968px) {
+            .sidebar { position: relative; width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--sidebar-border); padding: 1.5rem; }
+            .main-container { margin-left: 0; padding: 2rem 1.5rem; }
+            .phase-footer { margin-left: 0; padding: 1.5rem; flex-direction: column; gap: 1rem; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="phase-badge">Phase 12</div>
+            <h2>Nexus Commerce</h2>
+            <p>Handoff Report</p>
+        </div>
+        <h4>Contents</h4>
+        <ul>
+            <li><a href="#steps" class="nav-link">📋 Main Steps</a></li>
+            <li><a href="#difficulties" class="nav-link">🏗️ Difficulties & Fixes</a></li>
+            <li><a href="#deployment" class="nav-link">🚀 Deployment Guide</a></li>
+            <li><a href="#white-label" class="nav-link">🏷️ White-Label Checklist</a></li>
+            <li><a href="#cheatsheet" class="nav-link">🧠 Developer Cheat-Sheet</a></li>
+        </ul>
+    </aside>
+    <main class="main-container">
+        <header>
+            <div class="header-subtitle">Phase 12 · Settings & Deployment</div>
+            <h1>Dynamic Settings & Production Launch</h1>
+            <div class="subtitle">Enable clients to manage their own branding from the database and document the complete production deployment process.</div>
+            <div class="badge">Production Ready ✓</div>
+        </header>
+
+        <div class="category-title" id="steps">📋 Phase 12 Main Steps</div>
+        <div class="card">
+            <ul class="checklist">
+                <li>Created <code>updateSettings</code> Server Action with Zod validation and Prisma upsert.</li>
+                <li>Built a beautiful, grouped Settings form (Store, Contact, Social, Shipping).</li>
+                <li>Connected the Navbar to read store name dynamically from the database via <code>unstable_cache</code>.</li>
+                <li>Updated <code>layout.tsx</code> to pass <code>storeName</code> as a prop to Navbar and use it in <code>generateMetadata</code>.</li>
+                <li>Implemented cache invalidation via <code>revalidateTag("store-settings")</code> after saving.</li>
+            </ul>
+        </div>
+
+        <div class="category-title" id="difficulties">🏗️ Difficulties & Fixes</div>
+        
+        <div class="card warning">
+            <h3 class="problem-title">1. Navbar Read from ENV, Not Database <span class="tag tag-nextjs">Next.js</span></h3>
+            <div class="section-label">The Problem</div>
+            <div class="problem-desc">
+                The Settings page saved the store name to the database, but the Navbar was still reading from <code>storeConfig.branding.name</code> (which reads <code>NEXT_PUBLIC_STORE_NAME</code> from <code>.env</code>). This made the Settings page useless for branding.
+            </div>
+            <div class="section-label">The Solution</div>
+            <div class="solution-desc">
+                Added a <code>getStoreSettings</code> function using <code>unstable_cache</code> with a <code>store-settings</code> tag. The Layout now fetches the store name from this cache and passes it to the Navbar as a prop. Saving settings calls <code>revalidateTag("store-settings")</code> to invalidate the cache.
+            </div>
+        </div>
+
+        <div class="category-title" id="deployment">🚀 Production Deployment Guide</div>
+        <div class="card success">
+            <h3 class="problem-title">Deploying Nexus Commerce to Vercel</h3>
+            
+            <div class="section-label">Step 1: Prepare Your Repository</div>
+            <pre><code>git push origin main</code></pre>
+            
+            <div class="section-label">Step 2: Import to Vercel</div>
+            <ol>
+                <li>Go to <a href="https://vercel.com/new" target="_blank">vercel.com/new</a></li>
+                <li>Import your GitHub repository</li>
+                <li>Framework Preset: <strong>Next.js</strong></li>
+            </ol>
+            
+            <div class="section-label">Step 3: Environment Variables (Vercel Dashboard)</div>
+            <p class="solution-desc">Copy all keys from <code>.env</code> and add them in Vercel's "Environment Variables" section:</p>
+            <pre><code># App
+NEXT_PUBLIC_APP_URL=https://your-production-url.vercel.app
+NEXT_PUBLIC_STORE_NAME=Nexus Commerce
+NEXT_PUBLIC_BUSINESS_TYPE=RETAIL
+NEXT_PUBLIC_STORE_TIER=ENTERPRISE
+NEXT_PUBLIC_CURRENCY=USD
+
+# Database (Supabase Production)
+DATABASE_URL=postgresql://...pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=no-verify
+DIRECT_URL=postgresql://...pooler.supabase.com:5432/postgres
+
+# Auth
+AUTH_SECRET=your-production-secret-at-least-32-chars
+
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# Email
+EMAIL_PROVIDER=resend
+RESEND_API_KEY=re_...
+EMAIL_FROM=Nexus Commerce &lt;noreply@yourdomain.com&gt;
+
+# Stripe (LIVE KEYS)
+STRIPE_SECRET_KEY=sk_live_...
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+
+# Node
+NODE_ENV=production</code></pre>
+            
+            <div class="section-label">Step 4: Database Migrations</div>
+            <p class="solution-desc">After the first deploy, run migrations against production:</p>
+            <pre><code>npx prisma migrate deploy
+npx prisma db seed  # Only on first deploy</code></pre>
+            
+            <div class="section-label">Step 5: Stripe Webhook (Production)</div>
+            <ol>
+                <li>Go to <strong>Stripe Dashboard → Developers → Webhooks</strong></li>
+                <li>Click "Add endpoint"</li>
+                <li>Endpoint URL: <code>https://your-domain.vercel.app/api/webhooks/stripe</code></li>
+                <li>Events: <code>checkout.session.completed</code> and <code>checkout.session.async_payment_succeeded</code></li>
+                <li>Copy the <code>whsec_...</code> signing secret into Vercel's <code>STRIPE_WEBHOOK_SECRET</code></li>
+                <li>Redeploy to load the new secret</li>
+            </ol>
+            
+            <div class="section-label">Step 6: Domain Setup</div>
+            <ol>
+                <li>Vercel Dashboard → Domains → Add your client's domain</li>
+                <li>Update the client's DNS records as shown by Vercel</li>
+                <li>Wait for SSL provisioning (usually 1-2 minutes)</li>
+            </ol>
+            
+            <div class="section-label">Step 7: Post-Deployment Verification</div>
+            <ul class="checklist">
+                <li>Visit the production URL and confirm the Navbar renders</li>
+                <li>Test the locale switcher (EN/AR) and RTL</li>
+                <li>Log in as admin and access <code>/admin</code></li>
+                <li>Place a test order using a real Stripe test card <code>4242 4242 4242 4242</code></li>
+                <li>Confirm the webhook fires in the Stripe Dashboard</li>
+                <li>Verify the order appears in <code>/admin/orders</code> with status "PAID"</li>
+                <li>Check the confirmation email arrives</li>
+                <li>Update store name in Settings and verify it reflects instantly</li>
+            </ul>
+        </div>
+
+        <div class="category-title" id="white-label">🏷️ White-Label & Multi-Client Onboarding Checklist</div>
+        <div class="card success">
+            <h3 class="problem-title">Complete Client Delivery Workflow</h3>
+            <p class="solution-desc">This is the end-to-end process for delivering a new client site using Nexus as the foundation.</p>
+            
+            <div class="section-label">Phase A: Clone & Configure (15 minutes)</div>
+            <ul class="checklist">
+                <li>Clone the boilerplate into a new GitHub repo per client</li>
+                <li>Update <code>.env</code> with the client's Supabase, Stripe, Resend credentials</li>
+                <li>Set <code>NEXT_PUBLIC_STORE_NAME</code> and <code>NEXT_PUBLIC_BUSINESS_TYPE</code></li>
+            </ul>
+
+            <div class="section-label">Phase B: Brand Customization (30 minutes)</div>
+            <ul class="checklist">
+                <li>Update CSS variables in <code>src/app/globals.css</code> (colors)</li>
+                <li>Replace logo in <code>public/</code></li>
+                <li>Update <code>messages/en.json</code> and <code>ar.json</code> for brand copy</li>
+            </ul>
+
+            <div class="section-label">Phase C: Data Seeding (10 minutes)</div>
+            <ul class="checklist">
+                <li>Update <code>prisma/seed.ts</code> with the client's categories and products</li>
+                <li>Update the default admin email/password in <code>prisma/seed.ts</code></li>
+                <li>Run <code>npx prisma migrate deploy && npx prisma db seed</code></li>
+            </ul>
+
+            <div class="section-label">Phase D: Deploy & Handoff (20 minutes)</div>
+            <ul class="checklist">
+                <li>Deploy to Vercel following the guide above</li>
+                <li>Set up the Stripe production webhook</li>
+                <li>Log in as the client admin and verify all settings</li>
+                <li>Hand over credentials to the client with the Settings documentation</li>
+            </ul>
+        </div>
+
+        <div class="category-title" id="cheatsheet">🧠 Developer Cheat-Sheet & Pro-Tips</div>
+        <div class="card">
+            <ul class="cheat-sheet">
+                <li>
+                    <strong>Dynamic Branding:</strong> The Navbar's brand name comes from the <code>Setting</code> table (fallback to <code>storeConfig.branding.name</code>). The nav links (Shop/Menu) come from <code>businessType</code>. Never conflate the two.
+                </li>
+                <li>
+                    <strong>unstable_cache:</strong> Use <code>unstable_cache</code> with a tag when reading from the DB in Server Components that render on every page (like the layout). This prevents an extra DB query per request while still allowing invalidation on settings updates.
+                </li>
+                <li>
+                    <strong>Environment Variables:</strong> On Vercel, <code>NEXT_PUBLIC_*</code> variables are baked at build time. Change one = trigger a new deployment.
+                </li>
+                <li>
+                    <strong>Stripe Webhook Security:</strong> Always verify the <code>whsec_...</code> signature. Never accept a POST on the webhook route without it — otherwise attackers can forge "paid" events.
+                </li>
+                <li>
+                    <strong>Prisma Production:</strong> Use <code>prisma migrate deploy</code> (not <code>migrate dev</code>) in CI/CD. Never run <code>migrate reset</code> in production — it will wipe all data.
+                </li>
+            </ul>
+        </div>
+    </main>
+
+    <footer class="phase-footer">
+        <a href="phase-11-dashboard-analytics.html" class="footer-link">← Phase 11 (Dashboard)</a>
+        <span class="footer-center">Phase 12 · Project Complete</span>
+        <span class="footer-link disabled">🏆 Launch Ready</span>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.category-title');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const observerOptions = { root: null, rootMargin: '0px', threshold: 0.2 };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => link.classList.remove('active'));
+                        const activeLink = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+                        if (activeLink) activeLink.classList.add('active');
+                    }
+                });
+            }, observerOptions);
+            sections.forEach(section => observer.observe(section));
+        });
+    </script>
+</body>
+</html>
